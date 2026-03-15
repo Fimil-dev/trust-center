@@ -1,0 +1,26 @@
+---
+interface Props {
+  companyName: string;
+  website?: string;
+}
+
+const { companyName, website } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-gray-200 py-8 dark:border-gray-800">
+  <div class="mx-auto max-w-5xl px-6">
+    <p class="text-xs text-gray-400 dark:text-gray-500" style="font-family: var(--font-heading)">
+      &copy; {year}
+      {
+        website ? (
+          <a href={website} class="hover:underline">
+            {companyName}
+          </a>
+        ) : (
+          companyName
+        )
+      }
+    </p>
+  </div>
+</footer>

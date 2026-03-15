@@ -1,0 +1,43 @@
+---
+interface Props {
+  status: 'implemented' | 'partial' | 'planned' | 'certified' | 'in-progress';
+}
+
+const { status } = Astro.props;
+
+const labels: Record<string, string> = {
+  implemented: 'Implemented',
+  certified: 'Certified',
+  partial: 'In Progress',
+  'in-progress': 'In Progress',
+  planned: 'Planned',
+};
+
+type StatusGroup = 'green' | 'amber' | 'gray';
+const statusGroup: Record<string, StatusGroup> = {
+  implemented: 'green',
+  certified: 'green',
+  partial: 'amber',
+  'in-progress': 'amber',
+  planned: 'gray',
+};
+
+const group = statusGroup[status] ?? 'gray';
+const label = labels[status] ?? status;
+
+const dotColors: Record<StatusGroup, string> = {
+  green: 'bg-emerald-500',
+  amber: 'bg-amber-500',
+  gray: 'bg-gray-300 dark:bg-gray-600',
+};
+---
+
+<span class="inline-flex items-center gap-2" aria-label={`Status: ${label}`}>
+  <span class:list={['h-1.5 w-1.5 shrink-0 rounded-full', dotColors[group]]}></span>
+  <span
+    class="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400"
+    style="font-family: var(--font-heading)"
+  >
+    {label}
+  </span>
+</span>

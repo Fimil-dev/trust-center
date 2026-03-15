@@ -1,0 +1,171 @@
+---
+import TrustLayout from '../layouts/TrustLayout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import Hero from '../components/Hero.astro';
+import FrameworkCard from '../components/FrameworkCard.astro';
+import ControlDomain from '../components/ControlDomain.astro';
+import SubprocessorTable from '../components/SubprocessorTable.astro';
+import DocumentGrid from '../components/DocumentGrid.astro';
+import ContactCta from '../components/ContactCta.astro';
+import Footer from '../components/Footer.astro';
+
+import config from '../../trust.config';
+
+const site = config;
+const seoTitle = site.seo.title || `${site.company.name} Trust Center`;
+const seoDesc =
+  site.seo.description ||
+  `Learn about ${site.company.name}'s security controls and compliance posture.`;
+---
+
+<TrustLayout
+  title={seoTitle}
+  description={seoDesc}
+  ogImage={site.seo.ogImage}
+  favicon={site.company.favicon}
+  themeMode={site.theme.mode}
+  headingFont={site.theme.fonts.heading}
+  bodyFont={site.theme.fonts.body}
+  primaryColor={site.theme.colors.primary}
+>
+  <ThemeToggle />
+
+  <main>
+    <Hero companyName={site.company.name} />
+
+    {/* 01 — Compliance */}
+    {
+      site.frameworks.length > 0 && (
+        <section
+          id="compliance"
+          class="reveal border-b border-gray-200 py-16 sm:py-24 dark:border-gray-800"
+        >
+          <div class="mx-auto max-w-5xl px-6">
+            <p
+              class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
+              style="font-family: var(--font-heading)"
+            >
+              01 — Compliance
+            </p>
+            <h2
+              class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
+              style="font-family: var(--font-heading)"
+            >
+              Frameworks
+            </h2>
+            <div class="mt-4 divide-y divide-gray-100 dark:divide-gray-800/60">
+              {site.frameworks.map((fw) => (
+                <FrameworkCard
+                  name={fw.name}
+                  status={fw.status}
+                  description={fw.description}
+                  certifiedDate={fw.certifiedDate}
+                  auditBody={fw.auditBody}
+                  reportAvailable={fw.reportAvailable}
+                  securityEmail={site.company.securityEmail}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {/* 02 — Security Controls */}
+    {
+      site.controls.length > 0 && (
+        <section
+          id="controls"
+          class="reveal border-b border-gray-200 py-16 sm:py-24 dark:border-gray-800"
+        >
+          <div class="mx-auto max-w-5xl px-6">
+            <p
+              class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
+              style="font-family: var(--font-heading)"
+            >
+              02 — Security Controls
+            </p>
+            <h2
+              class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
+              style="font-family: var(--font-heading)"
+            >
+              Controls
+            </h2>
+            <div class="mt-4 divide-y divide-gray-200 dark:divide-gray-800">
+              {site.controls.map((domain) => (
+                <ControlDomain domain={domain.domain} items={domain.items} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {/* 03 — Subprocessors */}
+    {
+      site.subprocessors.length > 0 && (
+        <section
+          id="subprocessors"
+          class="reveal border-b border-gray-200 py-16 sm:py-24 dark:border-gray-800"
+        >
+          <div class="mx-auto max-w-5xl px-6">
+            <p
+              class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
+              style="font-family: var(--font-heading)"
+            >
+              03 — Subprocessors
+            </p>
+            <h2
+              class="mb-8 text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
+              style="font-family: var(--font-heading)"
+            >
+              Vendors
+            </h2>
+            <SubprocessorTable
+              subprocessors={site.subprocessors}
+              privacyEmail={site.company.privacyEmail}
+            />
+          </div>
+        </section>
+      )
+    }
+
+    {/* 04 — Documents */}
+    <section
+      id="documents"
+      class="reveal border-b border-gray-200 py-16 sm:py-24 dark:border-gray-800"
+    >
+      <div class="mx-auto max-w-5xl px-6">
+        <p
+          class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
+          style="font-family: var(--font-heading)"
+        >
+          04 — Documents
+        </p>
+        <h2
+          class="mb-8 text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
+          style="font-family: var(--font-heading)"
+        >
+          Policies
+        </h2>
+        <DocumentGrid documents={site.documents} />
+      </div>
+    </section>
+
+    {/* 05 — Contact */}
+    <section id="contact" class="reveal">
+      <div class="mx-auto max-w-5xl px-6">
+        <ContactCta
+          heading={site.contact.heading}
+          description={site.contact.description}
+          ctaLabel={site.contact.cta.label}
+          ctaHref={site.contact.cta.href}
+          questionnaireUrl={site.contact.questionnaireUrl}
+          prefilledQuestionnaireUrl={site.contact.prefilledQuestionnaireUrl}
+        />
+      </div>
+    </section>
+  </main>
+
+  <Footer companyName={site.company.name} website={site.company.website} />
+</TrustLayout>

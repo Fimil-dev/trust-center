@@ -1,0 +1,30 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  status: 'implemented' | 'partial' | 'planned';
+}
+
+const { title, description, status } = Astro.props;
+
+type StatusGroup = 'green' | 'amber' | 'gray';
+const statusGroup: Record<string, StatusGroup> = {
+  implemented: 'green',
+  partial: 'amber',
+  planned: 'gray',
+};
+const group = statusGroup[status] ?? 'gray';
+const dotColors: Record<StatusGroup, string> = {
+  green: 'bg-emerald-500',
+  amber: 'bg-amber-500',
+  gray: 'bg-gray-300 dark:bg-gray-600',
+};
+---
+
+<div class="flex gap-4 py-4">
+  <span class:list={['mt-2 h-1.5 w-1.5 shrink-0 rounded-full', dotColors[group]]}></span>
+  <div class="min-w-0">
+    <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100">{title}</h4>
+    <p class="mt-1 text-sm leading-relaxed text-gray-500 dark:text-gray-400">{description}</p>
+  </div>
+</div>

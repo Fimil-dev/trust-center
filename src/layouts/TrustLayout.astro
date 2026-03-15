@@ -1,0 +1,113 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  favicon?: string;
+  themeMode?: 'light' | 'dark' | 'system';
+  headingFont?: string;
+  bodyFont?: string;
+  primaryColor?: string;
+}
+
+const {
+  title,
+  description = '',
+  ogImage,
+  favicon = '/favicon.svg',
+  themeMode = 'system',
+  headingFont = 'IBM Plex Mono',
+  bodyFont = 'IBM Plex Sans',
+  primaryColor = '#7C3AED',
+} = Astro.props;
+
+// Build Google Fonts URL from config
+const systemFonts = ['system-ui', 'Arial', 'Helvetica', 'sans-serif', 'serif', 'monospace'];
+const isGoogleFont = (f: string) => !systemFonts.includes(f.toLowerCase());
+const googleFonts: string[] = [];
+
+if (isGoogleFont(headingFont)) {
+  googleFonts.push(`family=${headingFont.replace(/ /g, '+')}:wght@400;500;600;700`);
+}
+if (isGoogleFont(bodyFont) && bodyFont !== headingFont) {
+  googleFonts.push(`family=${bodyFont.replace(/ /g, '+')}:wght@400;500;600`);
+}
+
+const fontsUrl =
+  googleFonts.length > 0
+    ? `https://fonts.googleapis.com/css2?${googleFonts.join('&')}&display=swap`
+    : null;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+
+    <link rel="icon" type="image/svg+xml" href={favicon} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    {/* Open Graph */}
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site)} />}
+
+    {/* Fonts */}
+    {
+      fontsUrl && (
+        <>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link rel="stylesheet" href={fontsUrl} />
+        </>
+      )
+    }
+
+    {/* Theme detection — runs before paint to prevent flash */}
+    <script is:inline define:vars={{ themeMode, primaryColor }}>
+      (function () {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const shouldDark =
+          stored === 'dark' ||
+          (!stored && themeMode === 'dark') ||
+          (!stored && themeMode === 'system' && prefersDark);
+        if (shouldDark) {
+          document.documentElement.classList.add('dark');
+        }
+        document.documentElement.style.setProperty('--trust-primary', primaryColor);
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+    <slot />
+
+    {/* Scroll reveal observer */}
+    <script is:inline>
+      const revealObserver = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll('.reveal').forEach(function (el) {
+        revealObserver.observe(el);
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>

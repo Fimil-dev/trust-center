@@ -1,0 +1,24 @@
+---
+interface Props {
+  companyName: string;
+  tagline?: string;
+}
+
+const { companyName, tagline } = Astro.props;
+
+const displayTagline = tagline || `Security and compliance at ${companyName}`;
+---
+
+<section class="border-b border-gray-200 py-24 sm:py-32 lg:py-40 dark:border-gray-800">
+  <div class="mx-auto max-w-5xl px-6">
+    <h1
+      class="leading-none font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+      style="font-family: var(--font-heading); font-size: clamp(2.5rem, 8vw, 6.5rem)"
+    >
+      Trust Center
+    </h1>
+    <p class="mt-6 max-w-xl text-lg leading-relaxed text-gray-500 dark:text-gray-400">
+      {displayTagline}
+    </p>
+  </div>
+</section>

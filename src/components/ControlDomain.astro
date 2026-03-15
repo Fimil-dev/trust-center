@@ -1,0 +1,42 @@
+---
+import ControlItem from './ControlItem.astro';
+
+interface ControlItemData {
+  title: string;
+  description: string;
+  status: 'implemented' | 'partial' | 'planned';
+}
+
+interface Props {
+  domain: string;
+  items: ControlItemData[];
+}
+
+const { domain, items } = Astro.props;
+
+const implementedCount = items.filter((i) => i.status === 'implemented').length;
+---
+
+<div class="py-8">
+  <div class="mb-2 flex items-baseline gap-3">
+    <h3
+      class="text-lg font-medium text-gray-900 dark:text-gray-100"
+      style="font-family: var(--font-heading)"
+    >
+      {domain}
+    </h3>
+    <span
+      class="text-xs text-gray-400 tabular-nums dark:text-gray-500"
+      style="font-family: var(--font-heading)"
+    >
+      {implementedCount}/{items.length}
+    </span>
+  </div>
+  <div class="divide-y divide-gray-100 dark:divide-gray-800/60">
+    {
+      items.map((item) => (
+        <ControlItem title={item.title} description={item.description} status={item.status} />
+      ))
+    }
+  </div>
+</div>

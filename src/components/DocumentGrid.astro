@@ -1,0 +1,53 @@
+---
+interface Props {
+  documents: {
+    privacyPolicy?: string | null;
+    termsOfService?: string | null;
+    dataProcessingAgreement?: string | null;
+    serviceLevelAgreement?: string | null;
+    acceptableUsePolicy?: string | null;
+    cookiePolicy?: string | null;
+    securityPolicy?: string | null;
+  };
+}
+
+const { documents } = Astro.props;
+
+const docLabels: Record<string, string> = {
+  privacyPolicy: 'Privacy Policy',
+  termsOfService: 'Terms of Service',
+  dataProcessingAgreement: 'Data Processing Agreement',
+  serviceLevelAgreement: 'Service Level Agreement',
+  acceptableUsePolicy: 'Acceptable Use Policy',
+  cookiePolicy: 'Cookie Policy',
+  securityPolicy: 'Security Policy',
+};
+
+type DocKey = keyof typeof docLabels;
+const entries = (Object.entries(documents) as [DocKey, string | null | undefined][])
+  .filter((entry): entry is [DocKey, string] => entry[1] != null && entry[1] !== '')
+  .map(([key, url]) => ({
+    label: docLabels[key],
+    url,
+  }));
+---
+
+{
+  entries.length > 0 && (
+    <div class="grid grid-cols-1 gap-x-12 gap-y-1 sm:grid-cols-2">
+      {entries.map((doc) => (
+        <a
+          href={doc.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group flex items-center justify-between py-3 text-gray-700 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+        >
+          <span class="text-sm">{doc.label}</span>
+          <span class="text-gray-300 transition-transform group-hover:translate-x-0.5 dark:text-gray-600">
+            &rarr;
+          </span>
+        </a>
+      ))}
+    </div>
+  )
+}
