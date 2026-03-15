@@ -97,6 +97,7 @@ export const trustConfigSchema = z.object({
   documents: documentsSchema.default({}),
   contact: contactSchema,
   seo: seoSchema.default({}),
+  lastReviewed: z.string().optional(),
 });
 
 export type TrustConfig = z.infer<typeof trustConfigSchema>;

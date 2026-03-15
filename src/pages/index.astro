@@ -53,7 +53,7 @@ const seoDesc =
             >
               Frameworks
             </h2>
-            <div class="mt-4 divide-y divide-gray-100 dark:divide-gray-800/60">
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
               {site.frameworks.map((fw) => (
                 <FrameworkCard
                   name={fw.name}
@@ -167,5 +167,9 @@ const seoDesc =
     </section>
   </main>
 
-  <Footer companyName={site.company.name} website={site.company.website} />
+  <Footer
+    companyName={site.company.name}
+    website={site.company.website}
+    lastReviewed={site.lastReviewed}
+  />
 </TrustLayout>

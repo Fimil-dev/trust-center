@@ -282,7 +282,7 @@ export default defineConfig({
       name: 'Resend',
       purpose: 'Transactional email delivery',
       location: 'United States',
-      dpaUrl: null,
+      dpaUrl: 'https://resend.com/legal/dpa',
     },
     {
       name: 'PostHog',
@@ -320,4 +320,6 @@ export default defineConfig({
       "Learn about Fimil's security controls, compliance posture, and data protection practices.",
     ogImage: '/og-trust-center.png',
   },
+
+  lastReviewed: 'March 2026',
 });

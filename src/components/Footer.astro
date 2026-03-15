@@ -2,14 +2,15 @@
 interface Props {
   companyName: string;
   website?: string | undefined;
+  lastReviewed?: string | undefined;
 }
 
-const { companyName, website } = Astro.props;
+const { companyName, website, lastReviewed } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
 <footer class="border-t border-gray-200 py-8 dark:border-gray-800">
-  <div class="mx-auto max-w-5xl px-6">
+  <div class="mx-auto flex max-w-5xl items-baseline justify-between px-6">
     <p class="text-xs text-gray-400 dark:text-gray-500" style="font-family: var(--font-heading)">
       &copy; {year}
       {
@@ -22,5 +23,15 @@ const year = new Date().getFullYear();
         )
       }
     </p>
+    {
+      lastReviewed && (
+        <p
+          class="text-xs text-gray-400 dark:text-gray-500"
+          style="font-family: var(--font-heading)"
+        >
+          Last reviewed: {lastReviewed}
+        </p>
+      )
+    }
   </div>
 </footer>
