@@ -34,7 +34,8 @@ export default defineConfig({
     {
       name: 'ISO 27001:2022',
       status: 'in-progress',
-      description: 'ISMS framework established with comprehensive policy suite and controls implemented. Certification planned for 2027.',
+      description:
+        'ISMS framework established with comprehensive policy suite and controls implemented. Certification planned for 2027.',
       certifiedDate: null,
       auditBody: null,
       reportAvailable: false,
