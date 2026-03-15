@@ -128,8 +128,8 @@ export default defineConfig({
         {
           title: 'Vulnerability Management',
           description:
-            'Container image scanning (Trivy) in CI/CD blocks deployment on critical vulnerabilities. SAST scanning of own codebase planned for CI pipeline.',
-          status: 'partial',
+            'Container image scanning (Trivy) in CI/CD blocks deployment on critical vulnerabilities. SAST scanning (Semgrep, Bandit) runs on own codebase via GitHub Actions. Fimil scans its own repositories through the platform.',
+          status: 'implemented',
         },
       ],
     },
@@ -140,8 +140,8 @@ export default defineConfig({
         {
           title: 'Secure Development Lifecycle',
           description:
-            'CI pipeline enforces linting, testing, type checking, and container scanning. Pre-commit hooks catch issues before code reaches the repository. SAST integration and formal threat modeling on roadmap.',
-          status: 'partial',
+            'CI pipeline enforces linting, testing, type checking, SAST (Semgrep, Bandit), and container scanning. Pre-commit hooks catch issues before code reaches the repository. Fimil scans its own repositories through the platform.',
+          status: 'implemented',
         },
         {
           title: 'Input Validation & Injection Prevention',
