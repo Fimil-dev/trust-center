@@ -155,8 +155,8 @@ describe('trustConfigSchema', () => {
       ],
     });
     expect(config.subprocessors).toHaveLength(2);
-    expect(config.subprocessors[0].dpaUrl).toBeNull();
-    expect(config.subprocessors[1].dpaUrl).toBe('https://stripe.com/dpa');
+    expect(config.subprocessors[0]!.dpaUrl).toBeNull();
+    expect(config.subprocessors[1]!.dpaUrl).toBe('https://stripe.com/dpa');
   });
 
   it('rejects invalid dpaUrl format', () => {
@@ -209,7 +209,7 @@ describe('trustConfigSchema', () => {
         },
       ],
     });
-    expect(config.controls[0].icon).toBe('shield');
+    expect(config.controls[0]!.icon).toBe('shield');
   });
 
   it('sets framework defaults for reportAvailable and certifiedDate', () => {
@@ -217,9 +217,9 @@ describe('trustConfigSchema', () => {
       ...minimalConfig,
       frameworks: [{ name: 'SOC 2', status: 'in-progress' }],
     });
-    expect(config.frameworks[0].reportAvailable).toBe(false);
-    expect(config.frameworks[0].certifiedDate).toBeNull();
-    expect(config.frameworks[0].auditBody).toBeNull();
+    expect(config.frameworks[0]!.reportAvailable).toBe(false);
+    expect(config.frameworks[0]!.certifiedDate).toBeNull();
+    expect(config.frameworks[0]!.auditBody).toBeNull();
   });
 });
 

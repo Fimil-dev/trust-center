@@ -4,11 +4,11 @@ import StatusBadge from './StatusBadge.astro';
 interface Props {
   name: string;
   status: 'certified' | 'in-progress' | 'planned';
-  description?: string;
-  certifiedDate?: string | null;
-  auditBody?: string | null;
-  reportAvailable?: boolean;
-  securityEmail?: string;
+  description?: string | undefined;
+  certifiedDate?: string | null | undefined;
+  auditBody?: string | null | undefined;
+  reportAvailable?: boolean | undefined;
+  securityEmail?: string | undefined;
 }
 
 const {

@@ -8,7 +8,7 @@ interface Subprocessor {
 
 interface Props {
   subprocessors: Subprocessor[];
-  privacyEmail?: string;
+  privacyEmail?: string | undefined;
 }
 
 const { subprocessors, privacyEmail } = Astro.props;

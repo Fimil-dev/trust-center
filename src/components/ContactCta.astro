@@ -1,11 +1,11 @@
 ---
 interface Props {
   heading: string;
-  description?: string;
+  description?: string | undefined;
   ctaLabel: string;
   ctaHref: string;
-  questionnaireUrl?: string | null;
-  prefilledQuestionnaireUrl?: string | null;
+  questionnaireUrl?: string | null | undefined;
+  prefilledQuestionnaireUrl?: string | null | undefined;
 }
 
 const { heading, description, ctaLabel, ctaHref, questionnaireUrl, prefilledQuestionnaireUrl } =
