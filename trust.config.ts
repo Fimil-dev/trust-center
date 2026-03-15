@@ -33,8 +33,8 @@ export default defineConfig({
     },
     {
       name: 'ISO 27001:2022',
-      status: 'planned',
-      description: 'ISMS framework established. Certification planned for 2027.',
+      status: 'in-progress',
+      description: 'ISMS framework established with comprehensive policy suite and controls implemented. Certification planned for 2027.',
       certifiedDate: null,
       auditBody: null,
       reportAvailable: false,
@@ -67,8 +67,8 @@ export default defineConfig({
         {
           title: 'Data Retention & Deletion',
           description:
-            'Documented retention schedules per data category. Source code is ephemeral — cloned, scanned, and deleted (never persisted). Configurable report retention.',
-          status: 'implemented',
+            'Documented retention schedules per data category. Source code is ephemeral — cloned, scanned, and deleted (never persisted). Configurable report retention. Data subject access request workflow automation in progress.',
+          status: 'partial',
         },
       ],
     },
@@ -83,9 +83,9 @@ export default defineConfig({
           status: 'implemented',
         },
         {
-          title: 'Multi-Factor Authentication',
+          title: 'Authentication Security',
           description:
-            'MFA enforced on all infrastructure and administrative accounts. OAuth2/OIDC federation supported for customer SSO.',
+            'Strong password policy (12+ chars, complexity requirements), account lockout after failed attempts, automated brute force and credential stuffing detection. OAuth2/OIDC federation supported for customer SSO.',
           status: 'implemented',
         },
         {
@@ -97,8 +97,8 @@ export default defineConfig({
         {
           title: 'Access Reviews',
           description:
-            'Quarterly access reviews of all accounts and permissions. Automated deprovisioning on account deactivation.',
-          status: 'implemented',
+            'Automated deprovisioning on account deactivation. Bulk token revocation and session invalidation capabilities. Periodic access review process documented.',
+          status: 'partial',
         },
       ],
     },
@@ -127,8 +127,8 @@ export default defineConfig({
         {
           title: 'Vulnerability Management',
           description:
-            'Container image scanning in CI/CD blocks deployment on critical vulnerabilities. Fimil scans its own infrastructure as part of the platform.',
-          status: 'implemented',
+            'Container image scanning (Trivy) in CI/CD blocks deployment on critical vulnerabilities. SAST scanning of own codebase planned for CI pipeline.',
+          status: 'partial',
         },
       ],
     },
@@ -139,8 +139,8 @@ export default defineConfig({
         {
           title: 'Secure Development Lifecycle',
           description:
-            'CI pipeline enforces linting, testing, type checking, and container scanning. Pre-commit hooks catch issues before code reaches the repository.',
-          status: 'implemented',
+            'CI pipeline enforces linting, testing, type checking, and container scanning. Pre-commit hooks catch issues before code reaches the repository. SAST integration and formal threat modeling on roadmap.',
+          status: 'partial',
         },
         {
           title: 'Input Validation & Injection Prevention',
@@ -199,7 +199,7 @@ export default defineConfig({
         {
           title: 'High Availability',
           description:
-            'Horizontal pod autoscaling with pod disruption budgets. Rolling deployments with zero-downtime guarantee and automatic rollback.',
+            'Horizontal pod autoscaling with pod disruption budgets. Rolling deployments with zero-downtime guarantee and automatic rollback. Single-region deployment; multi-region failover and Redis HA planned.',
           status: 'partial',
         },
         {
