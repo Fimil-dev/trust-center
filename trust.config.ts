@@ -41,6 +41,105 @@ export default defineConfig({
       auditBody: null,
       reportAvailable: false,
     },
+    {
+      name: 'NIST CSF 2.0',
+      status: 'in-progress',
+      description:
+        'Comprehensive mapping to the six CSF functions (Govern, Identify, Protect, Detect, Respond, Recover). ~95% coverage from existing ISO 27001 and SOC 2 controls.',
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
+    {
+      name: 'CIS Controls v8',
+      status: 'in-progress',
+      description:
+        'Implementation-focused security controls aligned across all 18 control groups. ~90% coverage from existing technical and organizational controls.',
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
+    {
+      name: 'OWASP ASVS Level 2',
+      status: 'in-progress',
+      description:
+        'Application Security Verification Standard covering authentication, session management, access control, input validation, and API security. Core to our identity as an AppSec platform.',
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
+    {
+      name: 'GDPR',
+      status: 'in-progress',
+      description:
+        'EU General Data Protection Regulation. Privacy policy, DPAs, cookie consent with audit trail, and breach notification implemented. DSAR automation and DPIAs in progress.',
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
+    {
+      name: 'CCPA/CPRA',
+      status: 'in-progress',
+      description:
+        'California Consumer Privacy Act and California Privacy Rights Act. Privacy disclosures and cookie consent implemented. Consumer request workflows in progress.',
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
+    {
+      name: 'CSA STAR Level 1',
+      status: 'planned',
+      description:
+        'Cloud Security Alliance STAR self-assessment against the Cloud Controls Matrix (CCM v4). Planned as a mapping exercise leveraging existing ISO 27001 controls.',
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
+    {
+      name: 'FedRAMP Li-SaaS',
+      status: 'planned',
+      description:
+        'Low-Impact SaaS authorization based on NIST SP 800-53 Low baseline. Tailored path for SaaS products serving federal agencies.',
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
+    {
+      name: 'FedRAMP',
+      status: 'planned',
+      description:
+        'Full Federal Risk and Authorization Management Program authorization at Moderate baseline. Requires 3PAO assessment and JAB or Agency authorization.',
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
+    {
+      name: 'HIPAA',
+      status: 'planned',
+      description:
+        'Health Insurance Portability and Accountability Act. Planned to support healthcare customers requiring BAAs and PHI safeguards.',
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
+    {
+      name: 'Cyber Essentials',
+      status: 'planned',
+      description:
+        'UK government-backed cybersecurity certification covering five technical controls. Planned to support UK public sector customers.',
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
+    {
+      name: 'SLSA Framework',
+      status: 'planned',
+      description:
+        "Supply-chain Levels for Software Artifacts. Build provenance, source verification, and build platform integrity for Fimil's own software supply chain.",
+      certifiedDate: null,
+      auditBody: null,
+      reportAvailable: false,
+    },
   ],
 
   controls: [
@@ -70,6 +169,48 @@ export default defineConfig({
           title: 'Data Retention & Deletion',
           description:
             'Documented retention schedules per data category. Source code is ephemeral — cloned, scanned, and deleted (never persisted). Configurable report retention. Data subject access request workflow automation in progress.',
+          status: 'partial',
+        },
+        {
+          title: 'Key Lifecycle Management',
+          description:
+            'Application-layer encryption keys managed via environment configuration. KMS integration and automated key rotation planned to support OWASP ASVS V6 and FedRAMP FIPS 140-2 requirements.',
+          status: 'planned',
+        },
+      ],
+    },
+    {
+      domain: 'Privacy & Data Rights',
+      icon: 'eye',
+      items: [
+        {
+          title: 'Cookie Consent & Tracking',
+          description:
+            'Granular cookie consent with Accept/Reject/Customize options. Three categories (Necessary, Functional, Analytics). Full audit trail with IP, user agent, timestamp, and consent version. DNT signal respected.',
+          status: 'implemented',
+        },
+        {
+          title: 'Privacy Notices & Transparency',
+          description:
+            'Privacy Policy, Cookie Policy, and Data Processing Agreement published. Data collection practices disclosed per GDPR Articles 13-14 and CCPA requirements.',
+          status: 'implemented',
+        },
+        {
+          title: 'Data Subject Request Handling',
+          description:
+            'Rights to access, rectification, erasure, and portability documented per GDPR and CCPA/CPRA. Automated DSAR intake, tracking, and 30-day SLA fulfillment workflow in progress.',
+          status: 'partial',
+        },
+        {
+          title: 'Data Protection Impact Assessments',
+          description:
+            'DPIA process planned for high-risk processing activities per GDPR Article 35. Template and trigger criteria under development.',
+          status: 'planned',
+        },
+        {
+          title: 'International Data Transfers',
+          description:
+            'DPAs executed with all subprocessors. Standard Contractual Clauses (SCCs) for EU-to-US transfers planned for annexation to DPA.',
           status: 'partial',
         },
       ],
@@ -132,6 +273,12 @@ export default defineConfig({
             'Container image scanning (Trivy) in CI/CD blocks deployment on critical vulnerabilities. SAST scanning (Semgrep, Bandit) runs on own codebase via GitHub Actions. Fimil scans its own repositories through the platform.',
           status: 'implemented',
         },
+        {
+          title: 'Asset Inventory',
+          description:
+            'Infrastructure defined in Helm charts and Docker Compose. Container images tracked in registry. Formal enterprise asset register with individual owners and classification levels planned per CIS Controls 1-2 and NIST CSF ID.AM.',
+          status: 'partial',
+        },
       ],
     },
     {
@@ -161,6 +308,12 @@ export default defineConfig({
           description:
             'Distributed rate limiting per endpoint category. Automated brute force detection and IP blocking. Credential stuffing detection with alerting.',
           status: 'implemented',
+        },
+        {
+          title: 'Threat Modeling',
+          description:
+            'Security considerations integrated into SDLC via Change Management Policy. Formal threat modeling methodology for application architecture and new features planned per OWASP ASVS V1.',
+          status: 'planned',
         },
       ],
     },
@@ -249,6 +402,42 @@ export default defineConfig({
           title: 'Independent Security Review',
           description: 'External penetration test and independent security audit planned.',
           status: 'planned',
+        },
+        {
+          title: 'Continuous Compliance Monitoring',
+          description:
+            'Fimil scans its own repositories through the platform. Formal continuous monitoring program with mandated schedules and quarterly reporting planned per FedRAMP ConMon requirements.',
+          status: 'partial',
+        },
+      ],
+    },
+    {
+      domain: 'Supply Chain Security',
+      icon: 'package',
+      items: [
+        {
+          title: 'Software Bill of Materials (SBOM)',
+          description:
+            "Syft integrated as a scanner for customer repositories. SBOM generation for Fimil's own application dependencies planned to meet NIST CSF GV.SC and SLSA requirements.",
+          status: 'planned',
+        },
+        {
+          title: 'Build Provenance & Attestation',
+          description:
+            'GitHub Actions CI/CD provides hosted build platform. Cryptographically signed build provenance attestation via SLSA GitHub generator and Sigstore planned for SLSA Build L1/L2.',
+          status: 'planned',
+        },
+        {
+          title: 'Container Image Signing',
+          description:
+            'Container images built and pushed to DigitalOcean registry. Image signing with Cosign/Sigstore and signature verification before deployment planned.',
+          status: 'planned',
+        },
+        {
+          title: 'Dependency Integrity',
+          description:
+            'Lockfiles (package-lock.json, poetry.lock) pin dependency versions. Reachability analysis classifies direct vs. transitive dependencies. Lockfile hash verification and full provenance chain validation planned.',
+          status: 'partial',
         },
       ],
     },
