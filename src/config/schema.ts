@@ -88,6 +88,16 @@ const seoSchema = z.object({
   ogImage: z.string().optional(),
 });
 
+const questionnaireMetaSchema = z.object({
+  name: z.string(),
+  slug: z.string(),
+  description: z.string(),
+  enabled: z.boolean().default(true),
+  questionCount: z.number().int().nonnegative(),
+  sectionCount: z.number().int().nonnegative(),
+  version: z.string().optional(),
+});
+
 export const trustConfigSchema = z.object({
   company: companySchema,
   theme: themeSchema.default({}),
@@ -98,6 +108,8 @@ export const trustConfigSchema = z.object({
   contact: contactSchema,
   seo: seoSchema.default({}),
   lastReviewed: z.string().optional(),
+  subprocessorsLastUpdated: z.string().optional(),
+  questionnaires: z.array(questionnaireMetaSchema).default([]),
 });
 
 export type TrustConfig = z.infer<typeof trustConfigSchema>;

@@ -1,10 +1,16 @@
 ---
+interface Stat {
+  value: number;
+  label: string;
+}
+
 interface Props {
   companyName: string;
   tagline?: string;
+  stats?: Stat[];
 }
 
-const { companyName, tagline } = Astro.props;
+const { companyName, tagline, stats = [] } = Astro.props;
 
 const displayTagline = tagline || `Security and compliance at ${companyName}`;
 ---
@@ -20,5 +26,51 @@ const displayTagline = tagline || `Security and compliance at ${companyName}`;
     <p class="mt-6 max-w-xl text-lg leading-relaxed text-gray-500 dark:text-gray-400">
       {displayTagline}
     </p>
+    {
+      stats.length > 0 && (
+        <div class="mt-10 flex flex-wrap gap-x-12 gap-y-6">
+          {stats.map((stat) => (
+            <div>
+              <span
+                class="counter text-3xl font-semibold text-gray-900 tabular-nums dark:text-gray-100"
+                style="font-family: var(--font-heading)"
+                data-target={stat.value}
+              >
+                0
+              </span>
+              <p class="mt-1 text-sm text-gray-400 dark:text-gray-500">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      )
+    }
   </div>
 </section>
+
+<script is:inline>
+  (function () {
+    const observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const target = parseInt(el.getAttribute('data-target'), 10);
+          const duration = 800;
+          const start = performance.now();
+          function step(now) {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = String(Math.round(eased * target));
+            if (progress < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+          observer.unobserve(el);
+        });
+      },
+      { threshold: 0.5 },
+    );
+    document.querySelectorAll('.counter').forEach(function (el) {
+      observer.observe(el);
+    });
+  })();
+</script>

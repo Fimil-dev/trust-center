@@ -1,0 +1,42 @@
+---
+interface Props {
+  answer: 'yes' | 'no' | 'na' | 'partial';
+}
+
+const { answer } = Astro.props;
+
+const labels: Record<string, string> = {
+  yes: 'Yes',
+  no: 'No',
+  na: 'N/A',
+  partial: 'Partial',
+};
+
+type AnswerGroup = 'green' | 'red' | 'gray' | 'amber';
+const answerGroup: Record<string, AnswerGroup> = {
+  yes: 'green',
+  no: 'red',
+  na: 'gray',
+  partial: 'amber',
+};
+
+const group = answerGroup[answer] ?? 'gray';
+const label = labels[answer] ?? answer;
+
+const dotColors: Record<AnswerGroup, string> = {
+  green: 'bg-emerald-500',
+  red: 'bg-red-500',
+  gray: 'bg-gray-300 dark:bg-gray-600',
+  amber: 'bg-amber-500',
+};
+---
+
+<span class="inline-flex items-center gap-2" aria-label={`Answer: ${label}`}>
+  <span class:list={['h-1.5 w-1.5 shrink-0 rounded-full', dotColors[group]]}></span>
+  <span
+    class="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400"
+    style="font-family: var(--font-heading)"
+  >
+    {label}
+  </span>
+</span>

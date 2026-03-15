@@ -9,9 +9,10 @@ interface Subprocessor {
 interface Props {
   subprocessors: Subprocessor[];
   privacyEmail?: string | undefined;
+  lastUpdated?: string | undefined;
 }
 
-const { subprocessors, privacyEmail } = Astro.props;
+const { subprocessors, privacyEmail, lastUpdated } = Astro.props;
 
 const sorted = [...subprocessors].sort((a, b) => a.name.localeCompare(b.name));
 ---
@@ -101,17 +102,22 @@ const sorted = [...subprocessors].sort((a, b) => a.name.localeCompare(b.name));
     }
   </div>
 
-  {
-    privacyEmail && (
-      <p class="mt-8 text-xs text-gray-400 dark:text-gray-500">
-        Questions about subprocessors?{' '}
-        <a
-          href={`mailto:${privacyEmail}`}
-          class="underline transition-colors hover:text-gray-600 dark:hover:text-gray-300"
-        >
-          {privacyEmail}
-        </a>
-      </p>
-    )
-  }
+  <div
+    class="mt-8 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-xs text-gray-400 dark:text-gray-500"
+  >
+    {lastUpdated && <p>Last updated: {lastUpdated}</p>}
+    {
+      privacyEmail && (
+        <p>
+          Questions about subprocessors?{' '}
+          <a
+            href={`mailto:${privacyEmail}`}
+            class="underline transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+          >
+            {privacyEmail}
+          </a>
+        </p>
+      )
+    }
+  </div>
 </div>

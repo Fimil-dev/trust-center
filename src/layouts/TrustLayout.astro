@@ -8,6 +8,7 @@ interface Props {
   headingFont?: string | undefined;
   bodyFont?: string | undefined;
   primaryColor?: string | undefined;
+  lastReviewed?: string | undefined;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   headingFont = 'IBM Plex Mono',
   bodyFont = 'IBM Plex Sans',
   primaryColor = '#7C3AED',
+  lastReviewed,
 } = Astro.props;
 
 // Build Google Fonts URL from config
@@ -48,6 +50,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    {lastReviewed && <meta name="last-modified" content={lastReviewed} />}
 
     <link rel="icon" type="image/svg+xml" href={favicon} />
     <link rel="canonical" href={canonicalUrl} />

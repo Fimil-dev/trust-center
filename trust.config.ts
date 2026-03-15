@@ -1,4 +1,5 @@
 import { defineConfig } from './src/config/schema';
+import { questionnaireMeta } from './src/questionnaires';
 
 export default defineConfig({
   company: {
@@ -322,4 +323,6 @@ export default defineConfig({
   },
 
   lastReviewed: 'March 2026',
+  subprocessorsLastUpdated: 'March 2026',
+  questionnaires: questionnaireMeta,
 });

@@ -2,10 +2,12 @@
 import TrustLayout from '../layouts/TrustLayout.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import Hero from '../components/Hero.astro';
+import ControlStatusBar from '../components/ControlStatusBar.astro';
 import FrameworkCard from '../components/FrameworkCard.astro';
 import ControlDomain from '../components/ControlDomain.astro';
 import SubprocessorTable from '../components/SubprocessorTable.astro';
 import DocumentGrid from '../components/DocumentGrid.astro';
+import QuestionnaireCard from '../components/QuestionnaireCard.astro';
 import ContactCta from '../components/ContactCta.astro';
 import Footer from '../components/Footer.astro';
 
@@ -16,6 +18,22 @@ const seoTitle = site.seo.title || `${site.company.name} Trust Center`;
 const seoDesc =
   site.seo.description ||
   `Learn about ${site.company.name}'s security controls and compliance posture.`;
+
+// Compute control stats
+const allItems = site.controls.flatMap((d) => d.items);
+const implemented = allItems.filter((i) => i.status === 'implemented').length;
+const partial = allItems.filter((i) => i.status === 'partial').length;
+const planned = allItems.filter((i) => i.status === 'planned').length;
+
+// Compute document count
+const docCount = Object.values(site.documents).filter((v) => v != null && v !== '').length;
+
+// Hero stats
+const heroStats = [
+  { value: implemented, label: 'Controls implemented' },
+  { value: site.subprocessors.length, label: 'Vendors assessed' },
+  { value: docCount, label: 'Policies published' },
+];
 ---
 
 <TrustLayout
@@ -27,11 +45,19 @@ const seoDesc =
   headingFont={site.theme.fonts.heading}
   bodyFont={site.theme.fonts.body}
   primaryColor={site.theme.colors.primary}
+  lastReviewed={site.lastReviewed}
 >
   <ThemeToggle />
 
   <main>
-    <Hero companyName={site.company.name} />
+    <Hero companyName={site.company.name} stats={heroStats} />
+
+    {/* Status summary */}
+    {
+      allItems.length > 0 && (
+        <ControlStatusBar implemented={implemented} partial={partial} planned={planned} />
+      )
+    }
 
     {/* 01 — Compliance */}
     {
@@ -124,6 +150,7 @@ const seoDesc =
             <SubprocessorTable
               subprocessors={site.subprocessors}
               privacyEmail={site.company.privacyEmail}
+              lastUpdated={site.subprocessorsLastUpdated}
             />
           </div>
         </section>
@@ -152,7 +179,50 @@ const seoDesc =
       </div>
     </section>
 
-    {/* 05 — Contact */}
+    {/* 05 — Questionnaires */}
+    {
+      site.questionnaires.filter((q) => q.enabled).length > 0 && (
+        <section
+          id="questionnaires"
+          class="reveal border-b border-gray-200 py-16 sm:py-24 dark:border-gray-800"
+        >
+          <div class="mx-auto max-w-5xl px-6">
+            <p
+              class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
+              style="font-family: var(--font-heading)"
+            >
+              05 — Questionnaires
+            </p>
+            <h2
+              class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
+              style="font-family: var(--font-heading)"
+            >
+              Pre-filled Assessments
+            </h2>
+            <p class="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+              Browse our completed security questionnaires. Each assessment is pre-filled with our
+              current security posture.
+            </p>
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+              {site.questionnaires
+                .filter((q) => q.enabled)
+                .map((q) => (
+                  <QuestionnaireCard
+                    name={q.name}
+                    slug={q.slug}
+                    description={q.description}
+                    questionCount={q.questionCount}
+                    sectionCount={q.sectionCount}
+                    version={q.version}
+                  />
+                ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {/* 06 — Contact */}
     <section id="contact" class="reveal">
       <div class="mx-auto max-w-5xl px-6">
         <ContactCta

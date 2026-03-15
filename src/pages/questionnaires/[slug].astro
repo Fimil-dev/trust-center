@@ -1,0 +1,224 @@
+---
+import TrustLayout from '../../layouts/TrustLayout.astro';
+import ThemeToggle from '../../components/ThemeToggle.astro';
+import AnswerBadge from '../../components/AnswerBadge.astro';
+import Footer from '../../components/Footer.astro';
+
+import config from '../../../trust.config';
+import { allQuestionnaires } from '../../questionnaires';
+
+import type { Questionnaire } from '../../questionnaires/types';
+
+export function getStaticPaths() {
+  return allQuestionnaires
+    .filter((q) => q.enabled)
+    .map((q) => ({
+      params: { slug: q.slug },
+      props: { questionnaire: q },
+    }));
+}
+
+interface Props {
+  questionnaire: Questionnaire;
+}
+
+const { questionnaire } = Astro.props;
+const site = config;
+
+const allQuestions = questionnaire.sections.flatMap((s) => s.questions);
+const yesCount = allQuestions.filter((q) => q.answer === 'yes').length;
+const partialCount = allQuestions.filter((q) => q.answer === 'partial').length;
+const noCount = allQuestions.filter((q) => q.answer === 'no').length;
+const naCount = allQuestions.filter((q) => q.answer === 'na').length;
+const total = allQuestions.length;
+const pctYes = Math.round((yesCount / total) * 100);
+const pctPartial = Math.round((partialCount / total) * 100);
+const pctNo = Math.round((noCount / total) * 100);
+
+const pageTitle = `${questionnaire.name} — ${site.company.name} Trust Center`;
+---
+
+<TrustLayout
+  title={pageTitle}
+  description={`Pre-filled ${questionnaire.name} questionnaire for ${site.company.name}.`}
+  favicon={site.company.favicon}
+  themeMode={site.theme.mode}
+  headingFont={site.theme.fonts.heading}
+  bodyFont={site.theme.fonts.body}
+  primaryColor={site.theme.colors.primary}
+  lastReviewed={site.lastReviewed}
+>
+  <ThemeToggle />
+
+  <main class="py-16 sm:py-24">
+    <div class="mx-auto max-w-5xl px-6">
+      <a
+        href="/#questionnaires"
+        class="mb-8 inline-block text-sm text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+      >
+        &larr; Back to Trust Center
+      </a>
+
+      <h1
+        class="text-3xl font-semibold text-gray-900 sm:text-4xl dark:text-gray-100"
+        style="font-family: var(--font-heading)"
+      >
+        {questionnaire.name}
+      </h1>
+
+      <div
+        class="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm text-gray-400 dark:text-gray-500"
+      >
+        {questionnaire.version && <span>Version {questionnaire.version}</span>}
+        <span>{total} questions</span>
+        <span>{questionnaire.sections.length} sections</span>
+        {
+          questionnaire.url && (
+            <a
+              href={questionnaire.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="transition-colors hover:text-gray-600 hover:underline dark:hover:text-gray-300"
+            >
+              Official framework &rarr;
+            </a>
+          )
+        }
+      </div>
+
+      <p class="mt-4 max-w-2xl leading-relaxed text-gray-500 dark:text-gray-400">
+        {questionnaire.description}
+      </p>
+
+      {/* Answer summary bar */}
+      <div
+        class="mt-8 rounded-lg border border-gray-200 bg-white/60 p-6 dark:border-gray-700 dark:bg-gray-800/40"
+      >
+        <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+          <div class="flex items-baseline gap-2">
+            <span
+              class="text-3xl font-semibold text-gray-900 tabular-nums dark:text-gray-100"
+              style="font-family: var(--font-heading)"
+            >
+              {yesCount}
+            </span>
+            <span class="text-sm text-gray-400 dark:text-gray-500">
+              of {total} answered Yes
+            </span>
+          </div>
+          <div class="flex min-w-0 flex-1 items-center gap-3">
+            <div
+              class="h-2 min-w-[120px] flex-1 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800"
+            >
+              <div class="flex h-full">
+                <div class="h-full rounded-l-full bg-emerald-500" style={`width: ${pctYes}%`}></div>
+                {
+                  partialCount > 0 && (
+                    <div class="h-full bg-amber-400" style={`width: ${pctPartial}%`} />
+                  )
+                }
+                {noCount > 0 && <div class="h-full bg-red-400" style={`width: ${pctNo}%`} />}
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-4 text-xs text-gray-400 dark:text-gray-500">
+              <span class="flex items-center gap-1.5">
+                <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+                Yes ({yesCount})
+              </span>
+              {
+                partialCount > 0 && (
+                  <span class="flex items-center gap-1.5">
+                    <span class="inline-block h-2 w-2 rounded-full bg-amber-400" />
+                    Partial ({partialCount})
+                  </span>
+                )
+              }
+              {
+                noCount > 0 && (
+                  <span class="flex items-center gap-1.5">
+                    <span class="inline-block h-2 w-2 rounded-full bg-red-400" />
+                    No ({noCount})
+                  </span>
+                )
+              }
+              {
+                naCount > 0 && (
+                  <span class="flex items-center gap-1.5">
+                    <span class="inline-block h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-600" />
+                    N/A ({naCount})
+                  </span>
+                )
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sections */}
+      <div class="mt-8 divide-y divide-gray-200 dark:divide-gray-800">
+        {
+          questionnaire.sections.map((section) => {
+            const sectionYes = section.questions.filter((q) => q.answer === 'yes').length;
+            return (
+              <details class="group py-8">
+                <summary class="mb-4 flex cursor-pointer list-none items-baseline gap-3 [&::-webkit-details-marker]:hidden">
+                  <h2
+                    class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                    style="font-family: var(--font-heading)"
+                  >
+                    {section.name}
+                  </h2>
+                  <span
+                    class="text-xs text-gray-400 tabular-nums dark:text-gray-500"
+                    style="font-family: var(--font-heading)"
+                  >
+                    {sectionYes}/{section.questions.length}
+                  </span>
+                  <span
+                    class="ml-auto text-xs text-gray-300 transition-transform group-open:rotate-90 dark:text-gray-600"
+                    aria-hidden="true"
+                  >
+                    &#9654;
+                  </span>
+                </summary>
+                <div class="space-y-6">
+                  {section.questions.map((q) => (
+                    <div class="rounded-md border border-gray-100 bg-gray-50/50 p-4 dark:border-gray-800 dark:bg-gray-900/30">
+                      <div class="flex items-start justify-between gap-4">
+                        <div class="min-w-0 flex-1">
+                          <div class="flex items-baseline gap-3">
+                            <span
+                              class="shrink-0 text-xs text-gray-300 tabular-nums dark:text-gray-600"
+                              style="font-family: var(--font-heading)"
+                            >
+                              {q.id}
+                            </span>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">{q.question}</p>
+                          </div>
+                          {q.explanation && (
+                            <p class="mt-2 pl-0 text-sm leading-relaxed text-gray-400 sm:pl-12 dark:text-gray-500">
+                              {q.explanation}
+                            </p>
+                          )}
+                        </div>
+                        <div class="shrink-0">
+                          <AnswerBadge answer={q.answer} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            );
+          })
+        }
+      </div>
+    </div>
+  </main>
+
+  <Footer
+    companyName={site.company.name}
+    website={site.company.website}
+    lastReviewed={site.lastReviewed}
+  />
+</TrustLayout>

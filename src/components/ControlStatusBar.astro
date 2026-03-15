@@ -1,0 +1,59 @@
+---
+interface Props {
+  implemented: number;
+  partial: number;
+  planned: number;
+}
+
+const { implemented, partial, planned } = Astro.props;
+const total = implemented + partial + planned;
+const pctImplemented = Math.round((implemented / total) * 100);
+const pctPartial = Math.round((partial / total) * 100);
+---
+
+<div class="mx-auto max-w-5xl px-6 py-10">
+  <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+    <div class="flex items-baseline gap-2">
+      <span
+        class="text-3xl font-semibold text-gray-900 tabular-nums dark:text-gray-100"
+        style="font-family: var(--font-heading)"
+      >
+        {implemented}
+      </span>
+      <span class="text-sm text-gray-400 dark:text-gray-500"> of {total} controls implemented</span>
+    </div>
+    <div class="flex min-w-0 flex-1 items-center gap-3">
+      <div
+        class="h-2 min-w-[120px] flex-1 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800"
+      >
+        <div class="flex h-full">
+          <div class="h-full rounded-l-full bg-emerald-500" style={`width: ${pctImplemented}%`}>
+          </div>
+          {partial > 0 && <div class="h-full bg-amber-400" style={`width: ${pctPartial}%`} />}
+        </div>
+      </div>
+      <div class="flex gap-4 text-xs text-gray-400 dark:text-gray-500">
+        <span class="flex items-center gap-1.5">
+          <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+          Implemented
+        </span>
+        {
+          partial > 0 && (
+            <span class="flex items-center gap-1.5">
+              <span class="inline-block h-2 w-2 rounded-full bg-amber-400" />
+              Partial
+            </span>
+          )
+        }
+        {
+          planned > 0 && (
+            <span class="flex items-center gap-1.5">
+              <span class="inline-block h-2 w-2 rounded-full bg-gray-200 dark:bg-gray-700" />
+              Planned
+            </span>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</div>
