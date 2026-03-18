@@ -1,4 +1,4 @@
-import { z } from 'astro/zod';
+import { z } from 'zod';
 
 export const questionAnswerSchema = z.enum(['yes', 'no', 'na', 'partial']);
 
