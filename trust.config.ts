@@ -45,7 +45,7 @@ export default defineConfig({
       name: 'NIST CSF 2.0',
       status: 'in-progress',
       description:
-        'Comprehensive mapping to the six CSF functions (Govern, Identify, Protect, Detect, Respond, Recover). ~95% coverage from existing ISO 27001 and SOC 2 controls.',
+        'Comprehensive mapping to the six CSF functions (Govern, Identify, Protect, Detect, Respond, Recover). ~75% coverage implemented; pending external validation.',
       certifiedDate: null,
       auditBody: null,
       reportAvailable: false,
@@ -54,7 +54,7 @@ export default defineConfig({
       name: 'CIS Controls v8',
       status: 'in-progress',
       description:
-        'Implementation-focused security controls aligned across all 18 control groups. ~90% coverage from existing technical and organizational controls.',
+        'Implementation-focused security controls aligned across all 18 control groups. ~70% coverage implemented; formal gap assessment and external validation pending.',
       certifiedDate: null,
       auditBody: null,
       reportAvailable: false,
@@ -88,18 +88,18 @@ export default defineConfig({
     },
     {
       name: 'CSA STAR Level 1',
-      status: 'planned',
+      status: 'in-progress',
       description:
-        'Cloud Security Alliance STAR self-assessment against the Cloud Controls Matrix (CCM v4). Planned as a mapping exercise leveraging existing ISO 27001 controls.',
+        'Cloud Security Alliance STAR Level 1 self-assessment completed via CAIQ v4 (261 questions across 17 security domains). Self-assessment published on trust center. Formal registry submission planned.',
       certifiedDate: null,
       auditBody: null,
       reportAvailable: false,
     },
     {
       name: 'FedRAMP Li-SaaS',
-      status: 'planned',
+      status: 'in-progress',
       description:
-        'Low-Impact SaaS authorization based on NIST SP 800-53 Low baseline. Tailored path for SaaS products serving federal agencies.',
+        'Low-Impact SaaS authorization prerequisites in progress: System Security Plan, Continuous Monitoring Plan, network boundary documentation, and federal incident reporting procedures completed. FIPS 140-2 KMS integration and 3PAO engagement pending.',
       certifiedDate: null,
       auditBody: null,
       reportAvailable: false,
@@ -124,18 +124,18 @@ export default defineConfig({
     },
     {
       name: 'Cyber Essentials',
-      status: 'planned',
+      status: 'in-progress',
       description:
-        'UK government-backed cybersecurity certification covering five technical controls. Planned to support UK public sector customers.',
+        'UK government-backed cybersecurity certification. All five technical controls implemented: firewalls (Cloudflare WAF), secure configuration (container hardening), user access control (RBAC with MFA), malware protection (scanner isolation, Falco monitoring), and security update management (Dependabot, Trivy). Formal self-assessment certification pending.',
       certifiedDate: null,
       auditBody: null,
       reportAvailable: false,
     },
     {
       name: 'SLSA Framework',
-      status: 'planned',
+      status: 'in-progress',
       description:
-        "Supply-chain Levels for Software Artifacts. Build provenance, source verification, and build platform integrity for Fimil's own software supply chain.",
+        'Build provenance attestation via GitHub Actions, SPDX SBOMs generated for all container images, and Cosign keyless image signing implemented. Formal SLSA L2 assessment and registry pending.',
       certifiedDate: null,
       auditBody: null,
       reportAvailable: false,
@@ -150,7 +150,7 @@ export default defineConfig({
         {
           title: 'Encryption at Rest',
           description:
-            'All customer data encrypted using AES-256. Database encryption via managed provider. Application-layer encryption (Fernet) for sensitive fields including OAuth tokens and API credentials.',
+            'Database encryption at rest via managed provider (AES-256). Application-layer encryption using Fernet (AES-128-CBC with HMAC-SHA256 authentication) for sensitive fields including OAuth tokens and API credentials.',
           status: 'implemented',
         },
         {
@@ -168,14 +168,14 @@ export default defineConfig({
         {
           title: 'Data Retention & Deletion',
           description:
-            'Documented retention schedules per data category. Source code is ephemeral — cloned, scanned, and deleted (never persisted). Configurable report retention. Data subject access request workflow automation in progress.',
-          status: 'partial',
+            'Documented retention schedules per data category. Source code is ephemeral — cloned, scanned, and deleted (never persisted). Configurable report retention. Automated DSAR export and erasure endpoints with anonymization.',
+          status: 'implemented',
         },
         {
           title: 'Key Lifecycle Management',
           description:
-            'Application-layer encryption keys managed via environment configuration. KMS integration and automated key rotation planned to support OWASP ASVS V6 and FedRAMP FIPS 140-2 requirements.',
-          status: 'planned',
+            'Versioned encryption key rotation via MultiFernet — new data encrypted with latest key, old data decryptable with any known key. Re-encryption tooling for key migration. KMS integration planned for FIPS 140-2 requirements.',
+          status: 'partial',
         },
       ],
     },
@@ -198,14 +198,14 @@ export default defineConfig({
         {
           title: 'Data Subject Request Handling',
           description:
-            'Rights to access, rectification, erasure, and portability documented per GDPR and CCPA/CPRA. Automated DSAR intake, tracking, and 30-day SLA fulfillment workflow in progress.',
-          status: 'partial',
+            'Admin API endpoints for data export (GDPR Article 15) and erasure (GDPR Article 17) with full user data portability. Anonymization preserves audit trail while removing PII. Session invalidation on erasure.',
+          status: 'implemented',
         },
         {
           title: 'Data Protection Impact Assessments',
           description:
-            'DPIA process planned for high-risk processing activities per GDPR Article 35. Template and trigger criteria under development.',
-          status: 'planned',
+            'Formal DPIA process (FIMIL-DPIA-001) per GDPR Article 35 with six defined trigger criteria, step-by-step assessment methodology, fillable template with risk matrix, DPO review and sign-off workflow, and maintained DPIA register.',
+          status: 'implemented',
         },
         {
           title: 'International Data Transfers',
@@ -228,7 +228,7 @@ export default defineConfig({
         {
           title: 'Authentication Security',
           description:
-            'Strong password policy (12+ chars, complexity requirements), account lockout after failed attempts, automated brute force and credential stuffing detection. OAuth2/OIDC federation supported for customer SSO.',
+            'Strong password policy (12+ chars, Argon2id hashing), TOTP-based MFA with recovery codes, account lockout after failed attempts, automated brute force and credential stuffing detection. OAuth2/OIDC federation supported for customer SSO.',
           status: 'implemented',
         },
         {
@@ -240,8 +240,8 @@ export default defineConfig({
         {
           title: 'Access Reviews',
           description:
-            'Automated deprovisioning on account deactivation. Bulk token revocation and session invalidation capabilities. Periodic access review process documented.',
-          status: 'partial',
+            'Automated access review reports via operator portal: stale user detection (90+ days inactive), unused API token auditing, privileged user inventory across tenants. Automated deprovisioning on account deactivation with bulk token revocation.',
+          status: 'implemented',
         },
       ],
     },
@@ -276,8 +276,14 @@ export default defineConfig({
         {
           title: 'Asset Inventory',
           description:
-            'Infrastructure defined in Helm charts and Docker Compose. Container images tracked in registry. Formal enterprise asset register with individual owners and classification levels planned per CIS Controls 1-2 and NIST CSF ID.AM.',
-          status: 'partial',
+            'Formal asset register (FIMIL-AM-001) with 25+ assets classified across infrastructure, software, data, external services, and code repositories. Quarterly review cycle with ownership tracking and lifecycle management.',
+          status: 'implemented',
+        },
+        {
+          title: 'Web Application Firewall',
+          description:
+            'Cloudflare WAF deployed with managed rulesets for OWASP Top 10 protection, bot management, and rate limiting at the edge.',
+          status: 'implemented',
         },
       ],
     },
@@ -312,8 +318,8 @@ export default defineConfig({
         {
           title: 'Threat Modeling',
           description:
-            'Security considerations integrated into SDLC via Change Management Policy. Formal threat modeling methodology for application architecture and new features planned per OWASP ASVS V1.',
-          status: 'planned',
+            'Formal threat model (FIMIL-TM-001) using STRIDE methodology covering the three highest-risk areas: scanner execution pipeline, authentication & session management, and multi-tenant data isolation. 16 threats identified with likelihood/impact scoring and prioritized remediation. Reviewed annually or upon significant architecture change.',
+          status: 'implemented',
         },
       ],
     },
@@ -359,8 +365,9 @@ export default defineConfig({
         },
         {
           title: 'Disaster Recovery Testing',
-          description: 'Semi-annual DR testing planned. Backup restore validation on roadmap.',
-          status: 'planned',
+          description:
+            'DR test completed successfully (March 2026). Backup restore validated with documented RTO/RPO. Semi-annual testing schedule established.',
+          status: 'implemented',
         },
       ],
     },
@@ -406,8 +413,8 @@ export default defineConfig({
         {
           title: 'Continuous Compliance Monitoring',
           description:
-            'Fimil scans its own repositories through the platform. Formal continuous monitoring program with mandated schedules and quarterly reporting planned per FedRAMP ConMon requirements.',
-          status: 'partial',
+            'Continuous monitoring program with automated controls (Dependabot, Trivy, Falco, Cosign) and scheduled manual reviews (quarterly access reviews, semi-annual DR testing, annual risk assessment). Monthly vulnerability reporting and quarterly ConMon status reports.',
+          status: 'implemented',
         },
       ],
     },
@@ -418,26 +425,26 @@ export default defineConfig({
         {
           title: 'Software Bill of Materials (SBOM)',
           description:
-            "Syft integrated as a scanner for customer repositories. SBOM generation for Fimil's own application dependencies planned to meet NIST CSF GV.SC and SLSA requirements.",
-          status: 'planned',
+            'Syft integrated as a scanner for customer repositories. SPDX SBOMs generated for all container images in CI/CD pipeline via anchore/sbom-action and retained as build artifacts.',
+          status: 'implemented',
         },
         {
           title: 'Build Provenance & Attestation',
           description:
-            'GitHub Actions CI/CD provides hosted build platform. Cryptographically signed build provenance attestation via SLSA GitHub generator and Sigstore planned for SLSA Build L1/L2.',
-          status: 'planned',
+            'Cryptographic build provenance attestation generated via actions/attest-build-provenance for all container images. GitHub Actions CI/CD provides hosted build platform with OIDC-based identity.',
+          status: 'implemented',
         },
         {
           title: 'Container Image Signing',
           description:
-            'Container images built and pushed to DigitalOcean registry. Image signing with Cosign/Sigstore and signature verification before deployment planned.',
-          status: 'planned',
+            'All container images signed with Cosign (keyless via Sigstore/Fulcio) after vulnerability scanning passes. Signatures stored alongside images in the container registry.',
+          status: 'implemented',
         },
         {
           title: 'Dependency Integrity',
           description:
-            'Lockfiles (package-lock.json, poetry.lock) pin dependency versions. Reachability analysis classifies direct vs. transitive dependencies. Lockfile hash verification and full provenance chain validation planned.',
-          status: 'partial',
+            'Lockfiles (package-lock.json, poetry.lock) pin dependency versions. Reachability analysis classifies direct vs. transitive dependencies. Dependabot configured for automated dependency updates across all repositories.',
+          status: 'implemented',
         },
       ],
     },
@@ -464,7 +471,7 @@ export default defineConfig({
     },
     {
       name: 'Cloudflare',
-      purpose: 'CDN, DNS, DDoS protection',
+      purpose: 'CDN, DNS, DDoS protection, WAF',
       location: 'Global (anycast)',
       dpaUrl: 'https://www.cloudflare.com/cloudflare-customer-dpa/',
     },
