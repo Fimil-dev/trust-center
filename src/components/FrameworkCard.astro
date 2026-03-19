@@ -9,6 +9,7 @@ interface Props {
   auditBody?: string | null | undefined;
   reportAvailable?: boolean | undefined;
   securityEmail?: string | undefined;
+  lastVerified?: string | undefined;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   auditBody,
   reportAvailable = false,
   securityEmail,
+  lastVerified,
 } = Astro.props;
 
 const reportSubject = encodeURIComponent(`${name} Report Request`);
@@ -50,6 +52,11 @@ const reportBody = encodeURIComponent(
         Certified since {certifiedDate}
         {auditBody ? ` · ${auditBody}` : ''}
       </p>
+    )
+  }
+  {
+    lastVerified && (
+      <p class="mt-2 text-xs text-gray-400 dark:text-gray-500">Verified: {lastVerified}</p>
     )
   }
   {

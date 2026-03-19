@@ -223,6 +223,96 @@ describe('trustConfigSchema', () => {
   });
 });
 
+describe('lastVerified field', () => {
+  it('should accept lastVerified on framework', () => {
+    const result = trustConfigSchema.safeParse({
+      ...minimalConfig,
+      frameworks: [{ name: 'SOC 2', status: 'in-progress', lastVerified: 'March 2026' }],
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.frameworks[0]!.lastVerified).toBe('March 2026');
+    }
+  });
+
+  it('should default lastVerified to undefined', () => {
+    const config = trustConfigSchema.parse({
+      ...minimalConfig,
+      frameworks: [{ name: 'SOC 2', status: 'in-progress' }],
+    });
+    expect(config.frameworks[0]!.lastVerified).toBeUndefined();
+  });
+
+  it('should accept lastVerified on control item', () => {
+    const result = trustConfigSchema.safeParse({
+      ...minimalConfig,
+      controls: [
+        {
+          domain: 'Test',
+          items: [
+            {
+              title: 'Control',
+              description: 'Desc',
+              status: 'implemented',
+              lastVerified: 'March 2026',
+            },
+          ],
+        },
+      ],
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.controls[0]!.items[0]!.lastVerified).toBe('March 2026');
+    }
+  });
+});
+
+describe('changelog schema', () => {
+  it('should accept valid changelog entries', () => {
+    const result = trustConfigSchema.safeParse({
+      ...minimalConfig,
+      changelog: [
+        {
+          date: '2026-03-18',
+          title: 'MFA implemented',
+          description: 'TOTP-based multi-factor authentication',
+        },
+      ],
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('should require date and title', () => {
+    const missingDate = trustConfigSchema.safeParse({
+      ...minimalConfig,
+      changelog: [{ title: 'Test' }],
+    });
+    expect(missingDate.success).toBe(false);
+
+    const missingTitle = trustConfigSchema.safeParse({
+      ...minimalConfig,
+      changelog: [{ date: '2026-03-18' }],
+    });
+    expect(missingTitle.success).toBe(false);
+  });
+
+  it('should default to empty array', () => {
+    const config = trustConfigSchema.parse(minimalConfig);
+    expect(config.changelog).toEqual([]);
+  });
+
+  it('should allow optional description', () => {
+    const result = trustConfigSchema.safeParse({
+      ...minimalConfig,
+      changelog: [{ date: '2026-03-18', title: 'Quick fix' }],
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.changelog[0]!.description).toBeUndefined();
+    }
+  });
+});
+
 describe('defineConfig', () => {
   it('returns parsed config for valid input', () => {
     const config = defineConfig(minimalConfig);

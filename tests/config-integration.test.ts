@@ -55,3 +55,39 @@ describe('trust.config.ts (Fimil reference config)', () => {
     }
   });
 });
+
+describe('lastVerified dates', () => {
+  it('all frameworks should have lastVerified', () => {
+    config.frameworks.forEach((f) => {
+      expect(f.lastVerified).toBeDefined();
+      expect(typeof f.lastVerified).toBe('string');
+    });
+  });
+
+  it('all control items should have lastVerified', () => {
+    config.controls.forEach((domain) => {
+      domain.items.forEach((item) => {
+        expect(item.lastVerified).toBeDefined();
+      });
+    });
+  });
+});
+
+describe('changelog', () => {
+  it('should have changelog entries', () => {
+    expect(config.changelog.length).toBeGreaterThan(0);
+  });
+
+  it('all entries should have date and title', () => {
+    config.changelog.forEach((entry) => {
+      expect(entry.date).toBeDefined();
+      expect(entry.title).toBeDefined();
+    });
+  });
+
+  it('entries should be in reverse chronological order', () => {
+    for (let i = 0; i < config.changelog.length - 1; i++) {
+      expect(config.changelog[i].date >= config.changelog[i + 1].date).toBe(true);
+    }
+  });
+});

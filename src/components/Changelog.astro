@@ -1,0 +1,62 @@
+---
+interface ChangelogEntry {
+  date: string;
+  title: string;
+  description?: string;
+}
+
+interface Props {
+  entries: ChangelogEntry[];
+}
+
+const { entries } = Astro.props;
+const visible = entries.slice(0, 10);
+const hasMore = entries.length > 10;
+---
+
+{
+  visible.length > 0 && (
+    <div class="relative">
+      <div class="space-y-0">
+        {visible.map((entry, i) => (
+          <div class="relative flex gap-4 pb-8 last:pb-0">
+            {/* Vertical line */}
+            {i < visible.length - 1 && (
+              <div
+                class="absolute top-3 bottom-0 left-[5px] w-px"
+                style="background-color: var(--color-primary-200, #e9d5ff)"
+              />
+            )}
+            {/* Dot */}
+            <div class="relative z-10 mt-1.5 shrink-0">
+              <div
+                class="h-[11px] w-[11px] rounded-full border-2"
+                style="background-color: var(--color-primary-500, var(--trust-primary, #7C3AED)); border-color: var(--color-primary-500, var(--trust-primary, #7C3AED))"
+              />
+            </div>
+            {/* Content */}
+            <div class="min-w-0 pt-0">
+              <p
+                class="text-xs text-gray-400 dark:text-gray-500"
+                style="font-family: var(--font-heading)"
+              >
+                {entry.date}
+              </p>
+              <p class="mt-1 text-sm font-medium text-gray-900 dark:text-gray-100">{entry.title}</p>
+              {entry.description && (
+                <p class="mt-1 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+                  {entry.description}
+                </p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+      {hasMore && (
+        <p class="mt-4 text-xs text-gray-400 dark:text-gray-500">
+          Showing 10 of {entries.length} entries.
+        </p>
+      )}
+    </div>
+  )
+}
