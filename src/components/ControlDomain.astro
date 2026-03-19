@@ -5,7 +5,7 @@ interface ControlItemData {
   title: string;
   description: string;
   status: 'implemented' | 'partial' | 'planned';
-  lastVerified?: string;
+  lastVerified?: string | undefined;
 }
 
 interface Props {

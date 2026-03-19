@@ -87,7 +87,7 @@ describe('changelog', () => {
 
   it('entries should be in reverse chronological order', () => {
     for (let i = 0; i < config.changelog.length - 1; i++) {
-      expect(config.changelog[i].date >= config.changelog[i + 1].date).toBe(true);
+      expect(config.changelog[i]!.date >= config.changelog[i + 1]!.date).toBe(true);
     }
   });
 });
