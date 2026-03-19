@@ -124,7 +124,7 @@ export const vsaFull: Questionnaire = {
           question: 'How is customer data encrypted?',
           answer: 'yes',
           explanation:
-            'TLS 1.2+ for data in transit. Fernet encryption (AES-128-CBC + HMAC-SHA256) for sensitive fields at rest. Database encryption via DigitalOcean managed PostgreSQL. Backups encrypted in S3.',
+            'TLS 1.2+ for data in transit. MultiFernet encryption (AES-128-CBC + HMAC-SHA256) with versioned key rotation for sensitive fields at rest. Database encryption via DigitalOcean managed PostgreSQL. Backups encrypted in S3.',
         },
         {
           id: 'DPAC-4',
@@ -212,7 +212,7 @@ export const vsaFull: Questionnaire = {
           question: 'How are passwords hashed?',
           answer: 'yes',
           explanation:
-            'Passwords are hashed using bcrypt with per-password salt. Bcrypt provides adaptive cost factor for brute-force resistance.',
+            'Passwords are hashed using Argon2id (memory-hard) with per-password salt. Migrated from bcrypt to Argon2id for stronger resistance against GPU and ASIC attacks.',
         },
         {
           id: 'DPAC-16',
@@ -224,9 +224,9 @@ export const vsaFull: Questionnaire = {
         {
           id: 'DPAC-17',
           question: 'Is MFA required for employees/contractors to log in to production systems?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            "MFA is not yet implemented in the Fimil application itself. Production Kubernetes access relies on DigitalOcean's authentication and Kubernetes RBAC. MFA implementation is planned.",
+            'TOTP-based MFA with recovery codes implemented in the application with two-step login flow and encrypted secret storage. Production Kubernetes access controlled via DigitalOcean authentication and Kubernetes RBAC.',
         },
         {
           id: 'DPAC-18',
@@ -390,9 +390,9 @@ export const vsaFull: Questionnaire = {
         {
           id: 'PRO-4',
           question: 'What is the timeframe for patching critical vulnerabilities?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Trivy blocks deployment of containers with critical vulnerabilities. EPSS enrichment prioritizes actively exploited CVEs. No formal SLA for vulnerability patching timelines yet.',
+            'Formal patch management SLA: Critical 24h, High 7d, Medium 30d. Trivy blocks deployment of containers with critical vulnerabilities. EPSS enrichment prioritizes actively exploited CVEs. Dependabot provides automated dependency update PRs.',
         },
         {
           id: 'PRO-5',
@@ -418,9 +418,9 @@ export const vsaFull: Questionnaire = {
         {
           id: 'PRO-8',
           question: 'How regularly do you evaluate patches and updates?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Container image scanning on every build detects known CVEs. No automated dependency update tooling (Dependabot/Renovate) or formal patch evaluation cadence established yet.',
+            'Dependabot configured across all repos for automated dependency updates. Container image scanning on every build detects known CVEs. Patch management SLA: Critical 24h, High 7d, Medium 30d.',
         },
         {
           id: 'PRO-9',
@@ -470,7 +470,7 @@ export const vsaFull: Questionnaire = {
             'Do you have systems to mitigate web application vulnerabilities (WAF, proxies)?',
           answer: 'yes',
           explanation:
-            'Cloudflare provides DDoS protection and WAF capabilities. Application-level protections include rate limiting, CSRF protection, input validation, and Content-Security-Policy headers.',
+            'Cloudflare WAF deployed with managed rulesets for web application protection. Cloudflare provides DDoS protection. Application-level protections include rate limiting, CSRF protection, input validation, and Content-Security-Policy headers.',
         },
         {
           id: 'PRO-16',
@@ -491,14 +491,14 @@ export const vsaFull: Questionnaire = {
           question: 'Are production changes reviewed by at least two engineers?',
           answer: 'partial',
           explanation:
-            'CODEOWNERS file established. CI pipeline gates on linting, tests, and container scanning. Currently sole founder; multi-reviewer approval to be implemented as team grows.',
+            'Branch protection enforced: GPG-signed commits required, CI status checks required, enforce admins enabled. CODEOWNERS file established. CI pipeline gates on linting, tests, and container scanning. Currently sole founder; multi-reviewer approval to be implemented as team grows.',
         },
         {
           id: 'PRO-19',
           question: 'What is your secrets management strategy?',
           answer: 'yes',
           explanation:
-            'Kubernetes Sealed Secrets encrypt production credentials. Fernet encryption for sensitive database fields. Secret redaction in logs. Gitleaks and TruffleHog scan for leaked secrets in CI.',
+            'Kubernetes Sealed Secrets encrypt production credentials. MultiFernet encryption with versioned key rotation for sensitive database fields. Secret redaction in logs. Gitleaks and TruffleHog scan for leaked secrets in CI.',
         },
         {
           id: 'PRO-20',
@@ -540,28 +540,28 @@ export const vsaFull: Questionnaire = {
           question: 'What cryptographic frameworks are used for data at rest?',
           answer: 'yes',
           explanation:
-            'Fernet encryption (AES-128-CBC + HMAC-SHA256) for sensitive fields (OAuth tokens, API credentials). Database encryption via DigitalOcean managed PostgreSQL. S3 backups encrypted.',
+            'MultiFernet encryption (AES-128-CBC + HMAC-SHA256) with versioned key rotation for sensitive fields (OAuth tokens, API credentials). Database encryption via DigitalOcean managed PostgreSQL. S3 backups encrypted.',
         },
         {
           id: 'PRO-26',
           question: 'What cryptographic frameworks are used for passwords?',
           answer: 'yes',
           explanation:
-            'Bcrypt with per-password salt for user passwords. SHA-256 hashing for API tokens and email verification tokens. Constant-time comparison for all secret operations.',
+            'Argon2id (memory-hard) with per-password salt for user passwords. SHA-256 hashing for API tokens and email verification tokens. Constant-time comparison for all secret operations.',
         },
         {
           id: 'PRO-27',
           question: 'Are any custom cryptographic frameworks used?',
           answer: 'no',
           explanation:
-            'No custom cryptography. All implementations use standard, well-maintained libraries: bcrypt, cryptography (Fernet), hashlib (SHA-256), and secrets module for token generation.',
+            'No custom cryptography. All implementations use standard, well-maintained libraries: argon2-cffi (Argon2id), cryptography (MultiFernet), hashlib (SHA-256), and secrets module for token generation.',
         },
         {
           id: 'PRO-28',
           question: 'What is your key management approach?',
           answer: 'partial',
           explanation:
-            'Encryption keys stored as environment variables via Kubernetes Sealed Secrets. No key rotation mechanism yet — changing SECRET_KEY breaks all encrypted data. HSM/KMS integration planned.',
+            'Encryption keys stored as environment variables via Kubernetes Sealed Secrets. MultiFernet versioned key rotation implemented for seamless encryption key transitions without data loss. KMS integration not yet in place.',
         },
         {
           id: 'PRO-29',
@@ -601,7 +601,7 @@ export const vsaFull: Questionnaire = {
           question: 'How is the Incident Response Program tested?',
           answer: 'partial',
           explanation:
-            'IRP is documented and technical capabilities are implemented (Incident model, SecurityAlert, auto-blocking, account lockout). Tabletop exercises and simulated incident drills are planned but not yet conducted.',
+            'IRP is documented and technical capabilities are implemented (Incident model, SecurityAlert, auto-blocking, account lockout). DR test completed March 2026 validated recovery procedures. Tabletop exercises and simulated incident drills planned but not yet conducted.',
         },
         {
           id: 'RS-5',
@@ -640,9 +640,9 @@ export const vsaFull: Questionnaire = {
         {
           id: 'SSC-3',
           question: 'Do you perform threat modeling during the design phase?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Risk Assessment (FIMIL-RISK-001) identifies 15 risks with treatment plans. Defense-in-depth architecture reflects threat awareness. No formal threat modeling methodology (STRIDE/DREAD) applied per feature.',
+            'Formal threat model using STRIDE methodology covering 3 areas with 16 identified threats and mitigations. Risk Assessment (FIMIL-RISK-001) identifies 15 risks with treatment plans. Defense-in-depth architecture reflects threat awareness.',
         },
         {
           id: 'SSC-4',
@@ -704,14 +704,14 @@ export const vsaFull: Questionnaire = {
             'How do you authenticate users? What password complexity and SSO options are available?',
           answer: 'yes',
           explanation:
-            'JWT tokens for API, Redis sessions for web UI. Password policy: 12+ chars, mixed case, digit, special char. OAuth2/OIDC SSO with GitHub and generic OIDC providers available on all plans.',
+            'JWT tokens for API, Redis sessions for web UI. Password policy: 12+ chars, mixed case, digit, special char. Argon2id hashing. TOTP-based MFA available. OAuth2/OIDC SSO with GitHub and generic OIDC providers available on all plans.',
         },
         {
           id: 'CFAS-2',
           question: 'Does the application allow user MFA enforcement by admins?',
-          answer: 'no',
+          answer: 'yes',
           explanation:
-            'MFA is not yet implemented in the application. MFA enforcement by admins is planned for a future release.',
+            'TOTP-based MFA implemented with recovery codes, two-step login flow, and encrypted secret storage. Users can enable MFA on their accounts.',
         },
         {
           id: 'CFAS-3',

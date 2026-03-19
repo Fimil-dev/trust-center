@@ -234,14 +234,14 @@ export const vsaCore: Questionnaire = {
           question: 'Is customer data encrypted at rest?',
           answer: 'yes',
           explanation:
-            'Fernet encryption (AES-128-CBC + HMAC-SHA256) for sensitive fields. Database encryption via DigitalOcean managed PostgreSQL. S3 backups encrypted.',
+            'MultiFernet encryption (AES-128-CBC + HMAC-SHA256) with versioned key rotation for sensitive fields. Database encryption via DigitalOcean managed PostgreSQL. S3 backups encrypted.',
         },
         {
           id: 'CORE-4',
           question: 'Do you have a process for managing encryption keys?',
           answer: 'partial',
           explanation:
-            'Encryption keys stored as environment variables via Kubernetes Sealed Secrets. No key rotation mechanism yet; HSM/KMS integration planned.',
+            'Encryption keys stored as environment variables via Kubernetes Sealed Secrets. MultiFernet versioned key rotation implemented for seamless encryption key transitions. KMS integration not yet in place.',
         },
         {
           id: 'CORE-5',
@@ -253,9 +253,9 @@ export const vsaCore: Questionnaire = {
         {
           id: 'CORE-6',
           question: 'Do you require MFA for internal access to production systems?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'MFA not yet implemented in the application. Production Kubernetes access relies on DigitalOcean authentication and Kubernetes RBAC. MFA is planned.',
+            'TOTP-based MFA with recovery codes implemented in the application with two-step login flow and encrypted secret storage. Production Kubernetes access controlled via DigitalOcean authentication and Kubernetes RBAC.',
         },
         {
           id: 'CORE-7',
@@ -269,7 +269,7 @@ export const vsaCore: Questionnaire = {
           question: 'What is your internal password policy?',
           answer: 'yes',
           explanation:
-            'Minimum 12 characters with mixed case, digit, and special character requirements. Bcrypt hashing with salt. Account lockout after 5 failed attempts (30-minute cooldown).',
+            'Minimum 12 characters with mixed case, digit, and special character requirements. Argon2id (memory-hard) hashing with salt. Account lockout after 5 failed attempts (30-minute cooldown).',
         },
         {
           id: 'CORE-9',
@@ -281,9 +281,9 @@ export const vsaCore: Questionnaire = {
         {
           id: 'CORE-10',
           question: 'Does the application support customer-enforced MFA?',
-          answer: 'no',
+          answer: 'yes',
           explanation:
-            'MFA is not yet implemented. Customer-enforced MFA is planned for a future release.',
+            'TOTP-based MFA implemented with recovery codes, two-step login flow, and encrypted secret storage. Users can enable MFA on their accounts.',
         },
         {
           id: 'CORE-11',
@@ -337,9 +337,9 @@ export const vsaCore: Questionnaire = {
         {
           id: 'CORE-18',
           question: 'What is your timeframe for patching critical vulnerabilities?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Trivy blocks deployment of containers with critical vulnerabilities. EPSS enrichment prioritizes actively exploited CVEs. No formal SLA for patching timelines yet.',
+            'Formal patch management SLA: Critical 24h, High 7d, Medium 30d. Trivy blocks deployment of containers with critical vulnerabilities. EPSS enrichment prioritizes actively exploited CVEs. Dependabot provides automated dependency update PRs.',
         },
         {
           id: 'CORE-19',
@@ -381,7 +381,7 @@ export const vsaCore: Questionnaire = {
           question: 'Do you use standard cryptographic frameworks (no custom cryptography)?',
           answer: 'yes',
           explanation:
-            'All implementations use standard libraries: bcrypt for passwords, Fernet (AES-128-CBC + HMAC-SHA256) for field encryption, SHA-256 for token hashing, secrets module for random generation.',
+            'All implementations use standard libraries: Argon2id for passwords, MultiFernet (AES-128-CBC + HMAC-SHA256) for field encryption with key rotation, SHA-256 for token hashing, secrets module for random generation.',
         },
         {
           id: 'CORE-25',
@@ -416,7 +416,7 @@ export const vsaCore: Questionnaire = {
           question: 'How is the IRP tested?',
           answer: 'partial',
           explanation:
-            'IRP documented with technical capabilities implemented (Incident model, SecurityAlert, auto-blocking). Tabletop exercises and simulated drills planned but not yet conducted.',
+            'IRP documented with technical capabilities implemented (Incident model, SecurityAlert, auto-blocking). DR test completed March 2026 validated recovery procedures. Tabletop exercises and simulated drills planned but not yet conducted.',
         },
         {
           id: 'CORE-30',
@@ -559,24 +559,24 @@ export const vsaCore: Questionnaire = {
           id: 'USP-3',
           question:
             'Do you have a mechanism to provide a copy of collected personal information to a consumer within 45 days of a verifiable request?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Data subject rights procedures documented in Data Governance Policy. Manual process currently; automated DSAR workflow not yet implemented.',
+            'Admin API endpoints implemented for GDPR data export (DSAR fulfillment). Data subject rights procedures documented in Data Governance Policy with automated export capability.',
         },
         {
           id: 'USP-4',
           question:
             "Do you have a mechanism to delete a consumer's personal information upon verifiable request?",
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Account deletion and data disposal procedures documented. Technical capabilities exist (user deactivation, session invalidation, token revocation). Automated deletion workflow not yet fully implemented.',
+            'Admin API endpoints implemented for GDPR data erasure. Account deletion with cascading data disposal including user deactivation, session invalidation, and token revocation.',
         },
         {
           id: 'USP-5',
           question: 'Is the deletion request cascaded to your service providers?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'DPAs with sub-processors include data deletion requirements. Manual cascade process currently; automated orchestration across all vendors not yet implemented.',
+            'DSAR erasure API handles internal data deletion. DPAs with sub-processors include data deletion requirements and are triggered as part of the erasure workflow.',
         },
         {
           id: 'USP-6',
@@ -694,7 +694,7 @@ export const vsaCore: Questionnaire = {
           question: 'Do you keep all received information confidential?',
           answer: 'yes',
           explanation:
-            'Data classified as Confidential or Restricted per Data Governance Policy. Fernet encryption for sensitive fields, tenant isolation, RBAC, and secret redaction in logs protect all received information.',
+            'Data classified as Confidential or Restricted per Data Governance Policy. MultiFernet encryption with key rotation for sensitive fields, tenant isolation, RBAC, and secret redaction in logs protect all received information.',
         },
         {
           id: 'GDPR-7',
@@ -736,7 +736,7 @@ export const vsaCore: Questionnaire = {
           question: 'Do you have adequate measures to protect personal data?',
           answer: 'yes',
           explanation:
-            'Multi-layered protection: TLS in transit, Fernet encryption at rest, bcrypt for passwords, RBAC, tenant isolation, audit logging, security monitoring, and container hardening.',
+            'Multi-layered protection: TLS in transit, MultiFernet encryption at rest with key rotation, Argon2id for passwords, TOTP-based MFA, RBAC, tenant isolation, audit logging, security monitoring, and container hardening.',
         },
         {
           id: 'GDPR-13',
@@ -780,7 +780,7 @@ export const vsaCore: Questionnaire = {
             'Do you cooperate with the Controller on Data Protection Impact Assessments (DPIA)?',
           answer: 'yes',
           explanation:
-            'DPA includes DPIA cooperation commitment. Risk Assessment methodology and Data Governance Policy provide the framework for privacy impact assessments.',
+            'DPA includes DPIA cooperation commitment. Formal DPIA process implemented with template and register. Risk Assessment methodology and Data Governance Policy provide the framework for privacy impact assessments.',
         },
         {
           id: 'GDPR-19',

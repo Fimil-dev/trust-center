@@ -103,15 +103,15 @@ export const mvsp: Questionnaire = {
             'Security headers — Apply relevant security headers (CSP, X-Frame-Options). Disable caching for sensitive API responses.',
           answer: 'yes',
           explanation:
-            'Nginx configuration includes Content-Security-Policy, X-Frame-Options, and X-Content-Type-Options headers. CORS configuration restricts cross-origin requests.',
+            'Nginx configuration includes Content-Security-Policy, X-Frame-Options, and X-Content-Type-Options headers. CORS configuration restricts cross-origin requests. Cloudflare WAF with managed rulesets provides additional protection.',
         },
         {
           id: '2.4',
           question:
             'Password policy — No character limits, allow 64+ characters, no secret questions as sole reset mechanism, email verification of changes, store hashed and salted with memory-hard function, enforce lockout.',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Password policy enforces 12+ characters with complexity requirements. Bcrypt hashing with salt. Account lockout after 5 failed attempts (30-minute). Email verification for SaaS registration. Bcrypt is not memory-hard; Argon2 would fully satisfy this requirement.',
+            'Password policy enforces 12+ characters with complexity requirements. Argon2id (memory-hard) hashing with salt. Account lockout after 5 failed attempts (30-minute cooldown). Email verification for SaaS registration. No secret questions used.',
         },
         {
           id: '2.5',
@@ -125,9 +125,9 @@ export const mvsp: Questionnaire = {
           id: '2.6',
           question:
             'Dependency patching — Keep third-party dependencies up to date. Apply medium+ severity patches. Prioritize KEV.',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Trivy image scanning in CI/CD blocks critical container vulnerabilities. EPSS enrichment for exploit prioritization. However, no automated dependency update tooling (Dependabot/Renovate) configured yet.',
+            'Dependabot configured across all repos for automated dependency updates. Trivy image scanning in CI/CD blocks critical container vulnerabilities. EPSS enrichment for exploit prioritization. Patch management SLA: Critical 24h, High 7d, Medium 30d.',
         },
         {
           id: '2.7',
@@ -143,7 +143,7 @@ export const mvsp: Questionnaire = {
             'Encryption — Use modern encryption for data in transit and at rest, including backups.',
           answer: 'yes',
           explanation:
-            'TLS 1.2+ for data in transit. Fernet (AES-128-CBC + HMAC-SHA256) for sensitive fields at rest. Database encryption via DigitalOcean managed provider. Backups compressed and stored in S3 with encryption.',
+            'TLS 1.2+ for data in transit. MultiFernet (AES-128-CBC + HMAC-SHA256) with versioned key rotation for sensitive fields at rest. Database encryption via DigitalOcean managed provider. Backups compressed and stored in S3 with encryption.',
         },
       ],
     },
@@ -178,17 +178,17 @@ export const mvsp: Questionnaire = {
           id: '3.4',
           question:
             'Time to fix vulnerabilities — Patch application vulnerabilities impacting security within 90 days. Prioritize actively exploited. Publish security bulletins.',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Trivy blocks critical vulnerabilities in CI/CD. EPSS enrichment prioritizes actively exploited CVEs. No formal SLA for vulnerability patching timelines or published security bulletins yet.',
+            'Formal patch management SLA: Critical 24h, High 7d, Medium 30d. Trivy blocks critical vulnerabilities in CI/CD. EPSS enrichment prioritizes actively exploited CVEs. Dependabot provides automated dependency update PRs.',
         },
         {
           id: '3.5',
           question:
             'Build and release process — Use version control and a consistent build process with provenance (SLSA Build Level 1). Store credentials separately from source code.',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Git version control with CI/CD pipeline, Helm-based deployments, and sealed secrets for credential separation. No SBOM generation, image signing, or SLSA attestation yet.',
+            'Git version control with CI/CD pipeline, Helm-based deployments, and sealed secrets for credential separation. SPDX SBOMs generated for all container images. Cosign keyless signing via Sigstore. SLSA provenance attestations via actions/attest-build-provenance.',
         },
       ],
     },
@@ -207,9 +207,9 @@ export const mvsp: Questionnaire = {
           id: '4.2',
           question:
             'Logical access — Limit sensitive data access to users with legitimate need. Deactivate redundant accounts. Regular access reviews. Require MFA for remote access to customer data and production.',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Five-level RBAC with tenant isolation enforces least-privilege access. Account deactivation and bulk token revocation supported. MFA is not yet implemented in the application; remote production access relies on Kubernetes RBAC.',
+            'Five-level RBAC with tenant isolation enforces least-privilege access. Account deactivation and bulk token revocation supported. TOTP-based MFA with recovery codes implemented. Automated access reviews via Fimil-Ops (stale users, tokens, privileged users).',
         },
         {
           id: '4.3',
@@ -223,9 +223,9 @@ export const mvsp: Questionnaire = {
           id: '4.4',
           question:
             'Backup and disaster recovery — Securely back up data to a different location. Maintain and test disaster recovery plans annually.',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Nightly PostgreSQL and Redis backups to S3 offsite storage with documented restore procedures (RTO 4h, RPO 24h). DR plan exists but has not yet been tested; semi-annual testing planned.',
+            'Nightly PostgreSQL and Redis backups to S3 offsite storage with documented restore procedures (RTO 4h, RPO 24h). DR test completed March 2026 with successful recovery validation.',
         },
       ],
     },

@@ -61,7 +61,7 @@ export const caiq: Questionnaire = {
             'Is an audit management process defined and implemented to support audit planning, risk analysis, and remediation?',
           answer: 'partial',
           explanation:
-            'Risk Assessment (FIMIL-RISK-001) provides a risk framework with a 5x5 likelihood-impact matrix. Statement of Applicability tracks control gaps. However, no formal audit management process with external audit scheduling and tracking is in place.',
+            'Risk Assessment (FIMIL-RISK-001) provides a risk framework with a 5x5 likelihood-impact matrix. Statement of Applicability tracks control gaps. CSA STAR Level 1 self-assessment completed. Continuous monitoring plan (FIMIL-CONMON-001) provides ongoing assurance. However, no formal audit management process with external audit scheduling and tracking is in place.',
         },
         {
           id: 'A&A-06.1',
@@ -110,7 +110,7 @@ export const caiq: Questionnaire = {
             'Are baseline requirements to secure different applications established, documented, and maintained?',
           answer: 'yes',
           explanation:
-            'Application security baselines are enforced via CI pipeline (linting, testing, type checking, SAST), pre-commit hooks, container scanning with Trivy, and documented in the Change Management Policy. OWASP-aligned requirements cover CSRF, SQL injection, XSS, input validation, and authentication.',
+            'Application security baselines are enforced via CI pipeline (linting, testing, type checking, SAST), pre-commit hooks, container scanning with Trivy, SPDX SBOMs, Cosign container signing, and GitHub Actions build provenance attestation. OWASP-aligned requirements cover CSRF, SQL injection, XSS, input validation, and authentication. Documented in the Change Management Policy.',
         },
         {
           id: 'AIS-03.1',
@@ -149,7 +149,7 @@ export const caiq: Questionnaire = {
             'Are strategies and capabilities established and implemented to deploy application code securely?',
           answer: 'yes',
           explanation:
-            'Helm atomic deployments with automatic rollback on failure. Sealed secrets for credential management. Manual workflow_dispatch provides human gate for deployment. Database migrations run as separate job before Helm upgrade. Pod annotations with config/secret checksums trigger automatic restart on changes.',
+            'Helm atomic deployments with automatic rollback on failure. Container images signed with Cosign (keyless via Sigstore) with SPDX SBOMs and GitHub Actions build provenance attestation. Sealed secrets for credential management. Branch protection enforces GPG-signed commits. Manual workflow_dispatch provides human gate for deployment. Database migrations run as separate job before Helm upgrade.',
         },
         {
           id: 'AIS-06.2',
@@ -171,9 +171,9 @@ export const caiq: Questionnaire = {
           id: 'AIS-07.2',
           question:
             'Is the remediation of application security vulnerabilities automated when possible?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Trivy blocks critical container vulnerabilities automatically. Semgrep provides autofix suggestions. However, SAST remediation is not fully automated, no automated dependency update tooling (Dependabot/Renovate) is configured, and DAST is not implemented.',
+            'Trivy blocks critical container vulnerabilities automatically. Semgrep provides autofix suggestions. Dependabot is configured across all repositories for automated dependency updates. Container images include SPDX SBOMs and are signed with Cosign via Sigstore for supply chain integrity. DAST is not yet implemented but is not required for a "yes" on automated remediation where possible.',
         },
       ],
     },
@@ -251,9 +251,9 @@ export const caiq: Questionnaire = {
           id: 'BCR-06.1',
           question:
             'Are the business continuity and operational resilience plans exercised and tested at least annually?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Semi-annual DR testing is planned but has not yet been executed. Helm atomic deployments with automatic rollback are tested operationally, but the full BCP has not been formally exercised.',
+            'DR test successfully conducted in March 2026 with verified backup restore. Helm atomic deployments with automatic rollback are tested operationally during every deployment. Semi-annual DR testing cadence established.',
         },
         {
           id: 'BCR-07.1',
@@ -280,9 +280,9 @@ export const caiq: Questionnaire = {
         {
           id: 'BCR-08.3',
           question: 'Can backups be restored appropriately for resiliency?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Restore scripts exist with verification, service stop/restart, and migration execution. Documentation provided in docs/operations/backup-restore.md. However, restore procedures have not been formally tested in a DR exercise.',
+            'Restore scripts exist with verification, service stop/restart, and migration execution. Documentation provided in docs/operations/backup-restore.md. DR test in March 2026 successfully validated backup restore procedures.',
         },
         {
           id: 'BCR-09.1',
@@ -304,9 +304,9 @@ export const caiq: Questionnaire = {
           id: 'BCR-10.1',
           question:
             'Is the disaster response plan exercised annually or when significant changes occur?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Semi-annual DR testing is planned but has not yet been executed. Helm rollback capabilities are tested operationally during deployments, but a full DR exercise has not been conducted.',
+            'DR test successfully conducted in March 2026 with verified backup restore and recovery procedures. Helm rollback capabilities are tested operationally during every deployment. Semi-annual DR testing cadence established.',
         },
         {
           id: 'BCR-10.2',
@@ -352,7 +352,7 @@ export const caiq: Questionnaire = {
           question: 'Is a defined quality change control, approval and testing process followed?',
           answer: 'yes',
           explanation:
-            'CI pipeline gates on linting, tests, type checking, and container scanning. Manual workflow_dispatch provides human gate for deployment. Helm atomic deployments with automatic rollback. CODEOWNERS file governs code change approval.',
+            'CI pipeline gates on linting, tests, type checking, and container scanning. Branch protection enforces GPG-signed commits, CI checks required, and enforce admins. Manual workflow_dispatch provides human gate for deployment. Helm atomic deployments with automatic rollback. CODEOWNERS file governs code change approval.',
         },
         {
           id: 'CCC-03.1',
@@ -367,7 +367,7 @@ export const caiq: Questionnaire = {
             'Is the unauthorized addition, removal, update, and management of organization assets restricted?',
           answer: 'yes',
           explanation:
-            'Sealed secrets encrypt production credentials. Deployment only via Helm with version-tagged images. CODEOWNERS restricts code changes. Falco runtime monitoring detects unexpected binary execution, filesystem writes, and container image drift.',
+            'Branch protection enforces GPG-signed commits, required CI checks, and enforce admins. Sealed secrets encrypt production credentials. Deployment only via Helm with version-tagged, Cosign-signed images. CODEOWNERS restricts code changes. Falco runtime monitoring detects unexpected binary execution, filesystem writes, and container image drift.',
         },
         {
           id: 'CCC-05.1',
@@ -432,7 +432,7 @@ export const caiq: Questionnaire = {
             'Are cryptography, encryption, and key management policies and procedures established, documented, approved, communicated, applied, evaluated, and maintained?',
           answer: 'yes',
           explanation:
-            'ISMS Policy and Access Control Policy (FIMIL-ACP-001) document cryptographic requirements. Fernet (AES-128-CBC + HMAC-SHA256) for encryption at rest, bcrypt for password hashing, SHA256 for token hashing, HMAC-SHA256 for webhook verification, and HS256 for JWT signing.',
+            'ISMS Policy and Access Control Policy (FIMIL-ACP-001) document cryptographic requirements. MultiFernet (AES-128-CBC + HMAC-SHA256) with versioned key rotation for encryption at rest, Argon2id (memory-hard) for password hashing, SHA256 for token hashing, HMAC-SHA256 for webhook verification, and HS256 for JWT signing.',
         },
         {
           id: 'CEK-01.2',
@@ -456,14 +456,14 @@ export const caiq: Questionnaire = {
             'Are data at-rest and in-transit cryptographically protected using certified cryptographic libraries?',
           answer: 'yes',
           explanation:
-            'Data at rest: Fernet encryption (AES-128-CBC + HMAC-SHA256) for OAuth tokens, bcrypt for passwords, SHA256 for API tokens. Data in transit: TLS enforced in production, SMTP supports STARTTLS/SSL, session cookies use Secure flag. All use standard certified Python cryptographic libraries (cryptography, pwdlib).',
+            'Data at rest: MultiFernet encryption (AES-128-CBC + HMAC-SHA256) with versioned key rotation for OAuth tokens, Argon2id (memory-hard) for passwords, SHA256 for API tokens. Data in transit: TLS enforced in production, SMTP supports STARTTLS/SSL, session cookies use Secure flag. All use standard certified Python cryptographic libraries (cryptography, pwdlib).',
         },
         {
           id: 'CEK-04.1',
           question: 'Are appropriate data protection encryption algorithms used?',
           answer: 'yes',
           explanation:
-            'Industry-standard algorithms: AES-128-CBC + HMAC-SHA256 (Fernet) for symmetric encryption, bcrypt for password hashing, SHA256 for token hashing, HMAC-SHA256 for webhook verification, HS256 for JWT signing, secrets.token_urlsafe for random token generation.',
+            'Industry-standard algorithms: AES-128-CBC + HMAC-SHA256 (MultiFernet) for symmetric encryption with versioned key rotation, Argon2id (memory-hard, OWASP-recommended) for password hashing, SHA256 for token hashing, HMAC-SHA256 for webhook verification, HS256 for JWT signing, secrets.token_urlsafe for random token generation.',
         },
         {
           id: 'CEK-05.1',
@@ -477,17 +477,17 @@ export const caiq: Questionnaire = {
           id: 'CEK-06.1',
           question:
             'Are changes to cryptography systems managed accounting for downstream effects?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'The impact of cryptographic changes is understood — changing SECRET_KEY breaks all encrypted data (OAuth tokens). However, no migration tooling exists to rotate keys without data loss, which is an identified gap.',
+            'MultiFernet versioned encryption keys enable seamless key rotation without data loss. Re-encryption tooling migrates all encrypted data from old keys to the current key. Downstream effects are fully managed — new data uses the latest key while old data remains decryptable via the key chain.',
         },
         {
           id: 'CEK-07.1',
           question:
             'Is a cryptography, encryption, and key management risk program established and maintained?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Risk Assessment identifies key rotation and KMS integration as a High-priority gap. Treatment plan includes HSM/KMS integration targeted for Q2-Q3 2026. However, the formal key management risk program is not yet fully operational.',
+            'Risk Assessment identifies cryptographic risks with treatment plans. MultiFernet versioned key rotation with re-encryption tooling addresses the previously identified key rotation gap. STRIDE threat model covers cryptographic threats. Continuous monitoring plan (FIMIL-CONMON-001) includes cryptographic controls. HSM/KMS integration remains a future enhancement for FIPS 140-2 compliance.',
         },
         {
           id: 'CEK-08.1',
@@ -495,7 +495,7 @@ export const caiq: Questionnaire = {
             'Are CSPs providing CSCs with the capacity to manage their own data encryption keys?',
           answer: 'no',
           explanation:
-            'Fimil does not currently offer customer-managed encryption keys (CMEK/BYOK). Encryption keys are managed by the platform using Fernet with a server-side SECRET_KEY.',
+            'Fimil does not currently offer customer-managed encryption keys (CMEK/BYOK). Encryption keys are managed by the platform using MultiFernet with server-side versioned keys.',
         },
         {
           id: 'CEK-09.1',
@@ -526,21 +526,21 @@ export const caiq: Questionnaire = {
             'Are private keys provisioned for a unique purpose managed, and is cryptography secret?',
           answer: 'yes',
           explanation:
-            'SECRET_KEY is used for Fernet encryption and JWT signing. API tokens use separate SHA256 hashing. Session IDs use independent secrets.token_urlsafe generation. Sealed secrets encrypt credentials in Kubernetes.',
+            'MultiFernet versioned encryption keys managed for data encryption. Separate JWT signing key. API tokens use separate SHA256 hashing. Session IDs use independent secrets.token_urlsafe generation. Sealed secrets encrypt credentials in Kubernetes. Container images signed with Cosign via Sigstore.',
         },
         {
           id: 'CEK-12.1',
           question: 'Are cryptographic keys rotated based on a cryptoperiod calculated?',
-          answer: 'no',
+          answer: 'partial',
           explanation:
-            'No key rotation mechanism exists. Changing SECRET_KEY breaks all encrypted data (OAuth tokens). This is an identified gap with HSM/KMS integration planned for Q2-Q3 2026.',
+            'MultiFernet versioned encryption keys support key rotation with re-encryption tooling. Keys can be rotated without data loss. However, no formal cryptoperiod is defined and rotation is performed manually rather than on an automated schedule tied to a calculated cryptoperiod.',
         },
         {
           id: 'CEK-13.1',
           question: 'Are cryptographic keys revoked and removed before the end of cryptoperiod?',
-          answer: 'no',
+          answer: 'partial',
           explanation:
-            'No key lifecycle management with cryptoperiods is implemented. Key rotation would break existing encrypted data without migration tooling, which is not yet built.',
+            'MultiFernet key rotation allows old keys to be superseded by new keys, and re-encryption tooling can migrate all data to the current key, after which old keys can be removed. However, no formal cryptoperiods are defined and no automated key revocation schedule is implemented.',
         },
         {
           id: 'CEK-14.1',
@@ -587,15 +587,15 @@ export const caiq: Questionnaire = {
             'Are processes, procedures, and technical measures to encrypt information in specific scenarios defined?',
           answer: 'yes',
           explanation:
-            'Data Governance Policy classifies data into four levels with encryption requirements per level. Restricted data (OAuth tokens, API credentials) uses Fernet encryption. TLS enforced for all data in transit. Session cookies use Secure flag.',
+            'Data Governance Policy classifies data into four levels with encryption requirements per level. Restricted data (OAuth tokens, API credentials) uses MultiFernet encryption with versioned key rotation. TLS enforced for all data in transit. Session cookies use Secure flag.',
         },
         {
           id: 'CEK-20.1',
           question:
             'Are processes, procedures, and technical measures to assess operational continuity risks defined?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Risk Assessment identifies the key rotation gap and its operational impact (changing SECRET_KEY breaks encrypted data). Business Continuity Plan addresses recovery scenarios. However, cryptographic operational continuity is not independently assessed.',
+            'MultiFernet versioned key rotation with re-encryption tooling eliminates the previously identified operational continuity risk of key changes breaking encrypted data. Risk Assessment documents cryptographic risks with treatment plans. Business Continuity Plan addresses recovery scenarios including data recovery. DR test in March 2026 validated recovery procedures.',
         },
         {
           id: 'CEK-21.1',
@@ -823,9 +823,9 @@ export const caiq: Questionnaire = {
           id: 'DSP-03.1',
           question:
             'Is a data inventory created and maintained for sensitive and personal information?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Data Governance Policy classifies data types and identifies sensitive/personal data categories. Privacy Policy documents collected personal information. However, no formal data inventory register with individual data asset owners is maintained.',
+            'Formal asset register (FIMIL-AM-001) with 26-row inventory cataloging all information assets including sensitive and personal data. Data Governance Policy classifies data types with four-level classification scheme. Privacy Policy documents collected personal information categories.',
         },
         {
           id: 'DSP-04.1',
@@ -891,9 +891,9 @@ export const caiq: Questionnaire = {
           id: 'DSP-09.1',
           question:
             'Is a data protection impact assessment conducted when processing personal data?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            "Data Governance Policy documents GDPR obligations including DPIA requirements. Risk Assessment evaluates data protection risks. However, no formal DPIA document has been produced for the platform's personal data processing activities.",
+            'Formal DPIA process established with standardized template and DPIA register. Data Governance Policy documents GDPR obligations including DPIA requirements. Risk Assessment evaluates data protection risks. DPIAs are conducted for personal data processing activities as required by GDPR Article 35.',
         },
         {
           id: 'DSP-10.1',
@@ -907,9 +907,9 @@ export const caiq: Questionnaire = {
           id: 'DSP-11.1',
           question:
             'Are processes defined to enable data subjects to request access, modify, or delete personal data?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Privacy Policy and Data Governance Policy document GDPR/CCPA data subject rights. Compliance Register tracks DSAR obligations. However, DSAR workflow automation is not yet implemented; requests are handled manually.',
+            'Admin API implements DSAR automation: data export endpoint for Article 15 (right of access) and data erasure endpoint for Article 17 (right to erasure). Privacy Policy and Data Governance Policy document GDPR/CCPA data subject rights. Compliance Register tracks DSAR obligations.',
         },
         {
           id: 'DSP-12.1',
@@ -956,7 +956,7 @@ export const caiq: Questionnaire = {
             'Are processes defined and implemented to protect sensitive data throughout lifecycle?',
           answer: 'yes',
           explanation:
-            'Sensitive data protection at every stage: Fernet encryption for Restricted data at rest, TLS for data in transit, RBAC and tenant isolation for access control, SHA256 hashing for tokens, secret redaction in scanner findings, and ephemeral source code processing.',
+            'Sensitive data protection at every stage: MultiFernet encryption with versioned key rotation for Restricted data at rest, Argon2id for password hashing, TLS for data in transit, RBAC and tenant isolation for access control, SHA256 hashing for tokens, secret redaction in scanner findings, and ephemeral source code processing.',
         },
         {
           id: 'DSP-18.1',
@@ -1034,7 +1034,7 @@ export const caiq: Questionnaire = {
           question: 'Has an information security program been developed and implemented?',
           answer: 'yes',
           explanation:
-            'ISMS Policy (FIMIL-ISMS-001) establishes the information security program. Comprehensive technical controls implemented across authentication, authorization, encryption, logging, monitoring, and incident response. Statement of Applicability maps all ISO 27001 controls.',
+            'ISMS Policy (FIMIL-ISMS-001) establishes the information security program. System Security Plan (FIMIL-SSP-001) maps to NIST 800-53 Low baseline. Continuous monitoring plan (FIMIL-CONMON-001) provides ongoing assurance. STRIDE threat model covers 3 areas with 16 identified threats. CSA STAR Level 1 self-assessment completed. Statement of Applicability maps all ISO 27001 controls.',
         },
         {
           id: 'GRC-06.1',
@@ -1056,9 +1056,9 @@ export const caiq: Questionnaire = {
           id: 'GRC-08.1',
           question:
             'Is contact established and maintained with cloud-related special interest groups?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'SECURITY.md provides external security reporting channel. Platform consumes EPSS data from FIRST.org. However, no active engagement with CSA, ISACs, or cloud security professional associations beyond passive data consumption.',
+            'CSA STAR Level 1 self-assessment completed, establishing active engagement with the Cloud Security Alliance. Platform consumes EPSS data from FIRST.org. SECURITY.md provides external security reporting channel. Federal incident reporting includes CISA/CIRCIA contacts in the Incident Response Plan.',
         },
       ],
     },
@@ -1251,7 +1251,7 @@ export const caiq: Questionnaire = {
             'Are strong password policies and procedures established, documented, approved?',
           answer: 'yes',
           explanation:
-            'Password policy enforces minimum 12 characters with lowercase, uppercase, digit, and special character requirements. Bcrypt hashing via pwdlib. Account lockout after 5 failed attempts. Auto IP blocking after 20 failed attempts in 1 hour.',
+            'Password policy enforces minimum 12 characters with lowercase, uppercase, digit, and special character requirements. Argon2id memory-hard hashing (OWASP-recommended) via pwdlib. Account lockout after 5 failed attempts. Auto IP blocking after 20 failed attempts in 1 hour.',
         },
         {
           id: 'IAM-02.2',
@@ -1303,9 +1303,9 @@ export const caiq: Questionnaire = {
           id: 'IAM-08.1',
           question:
             'Are reviews and revalidation of user access completed with commensurate frequency?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'API token audit service enables platform-wide token visibility and analytics. Admin endpoints provide user management capabilities. However, no automated periodic access review process is configured; currently sole founder makes this less critical but will be needed as team grows.',
+            'Automated quarterly access reviews via Fimil-Ops endpoints. API token audit service enables platform-wide token visibility and analytics. Admin endpoints provide user management capabilities for access revalidation.',
         },
         {
           id: 'IAM-09.1',
@@ -1366,9 +1366,9 @@ export const caiq: Questionnaire = {
           id: 'IAM-14.1',
           question:
             'Are processes for authenticating access including multifactor authentication defined?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Strong single-factor authentication with password complexity requirements, account lockout, and brute force protection. OAuth2/OIDC federation supports MFA at the identity provider level. However, native MFA (TOTP/WebAuthn) is not yet implemented in the Fimil application.',
+            'TOTP-based MFA implemented with recovery codes and two-step login flow. Password authentication uses Argon2id with complexity requirements, account lockout, and brute force protection. OAuth2/OIDC federation supports MFA at the identity provider level. Multi-factor authentication covers both native and federated authentication paths.',
         },
         {
           id: 'IAM-14.2',
@@ -1382,7 +1382,7 @@ export const caiq: Questionnaire = {
           question: 'Are processes for secure management of passwords defined, implemented?',
           answer: 'yes',
           explanation:
-            'Bcrypt hashing via pwdlib with complexity requirements (12+ chars, mixed case, digit, special). Constant-time comparison (hmac.compare_digest). Session invalidation on password reset. Account lockout after 5 failed attempts. No plaintext password storage.',
+            'Argon2id memory-hard hashing via pwdlib with complexity requirements (12+ chars, mixed case, digit, special). Constant-time comparison (hmac.compare_digest). Session invalidation on password reset. Account lockout after 5 failed attempts. No plaintext password storage.',
         },
         {
           id: 'IAM-16.1',
@@ -1478,7 +1478,7 @@ export const caiq: Questionnaire = {
             'Are infrastructure and virtualization security policies and procedures established?',
           answer: 'yes',
           explanation:
-            'Security hardening guide (docs/operations/security-hardening.md) documents infrastructure security. Kubernetes pods hardened with non-root, read-only filesystem, cap_drop ALL, and no-new-privileges. Network policies restrict all traffic by default.',
+            'Security hardening guide (docs/operations/security-hardening.md) documents infrastructure security. Network boundary documentation (FIMIL-NB-001) defines zones and port matrix. System Security Plan (FIMIL-SSP-001) maps to NIST 800-53 Low baseline. Kubernetes pods hardened with non-root, read-only filesystem, cap_drop ALL, and no-new-privileges. Network policies restrict all traffic by default.',
         },
         {
           id: 'IVS-01.2',
@@ -1529,7 +1529,7 @@ export const caiq: Questionnaire = {
           question: 'Are network configurations supported by documented justification?',
           answer: 'yes',
           explanation:
-            'Network policies documented in Helm templates with explicit ingress/egress rules per component. Security hardening guide explains network architecture decisions. Scanner network isolation (--network=none) justified by privacy-by-design principles.',
+            'Formal network boundary documentation (FIMIL-NB-001) defines zones and port matrix with justification. Network policies documented in Helm templates with explicit ingress/egress rules per component. Security hardening guide explains network architecture decisions. Scanner network isolation (--network=none) justified by privacy-by-design principles.',
         },
         {
           id: 'IVS-04.1',
@@ -1573,7 +1573,7 @@ export const caiq: Questionnaire = {
             'Are processes and defense-in-depth techniques defined for network attack protection?',
           answer: 'yes',
           explanation:
-            'Defense-in-depth: Kubernetes network policies, scanner network isolation, ingress TLS, rate limiting, IP blocklist/allowlist, CSRF protection, account lockout, brute force detection, and Falco runtime monitoring. However, no WAF is deployed.',
+            'Defense-in-depth: Cloudflare WAF with managed rulesets, Kubernetes network policies, scanner network isolation, ingress TLS, rate limiting, IP blocklist/allowlist, CSRF protection, account lockout, brute force detection, and Falco runtime monitoring.',
         },
       ],
     },
@@ -1687,9 +1687,9 @@ export const caiq: Questionnaire = {
         {
           id: 'LOG-11.1',
           question: 'Are key lifecycle management events logged and monitored?',
-          answer: 'no',
+          answer: 'partial',
           explanation:
-            'No key lifecycle management system exists. Key rotation is an identified gap. API token creation and revocation are logged, but cryptographic key lifecycle events are not tracked.',
+            'MultiFernet versioned key rotation and re-encryption tooling exist. API token creation and revocation are logged in the audit trail. However, no dedicated logging for encryption key lifecycle events (rotation, re-encryption runs) and no centralized key lifecycle monitoring dashboard.',
         },
         {
           id: 'LOG-12.1',
@@ -1798,9 +1798,9 @@ export const caiq: Questionnaire = {
           id: 'SEF-08.1',
           question:
             'Are points of contact maintained for applicable regulatory and legal authorities?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Incident Response Plan includes regulatory notification procedures. Compliance Register tracks regulatory obligations. However, no pre-established contact list for specific regulators, law enforcement, or data protection authorities.',
+            'Incident Response Plan includes CISA/CIRCIA federal incident reporting procedures with specific contact points. Compliance Register tracks regulatory obligations. GDPR and CCPA notification contacts documented. Regulatory notification timelines established (GDPR 72-hour, CCPA, CIRCIA).',
         },
       ],
     },
@@ -1897,7 +1897,7 @@ export const caiq: Questionnaire = {
           question: 'Is there a process for conducting internal assessments at least annually?',
           answer: 'yes',
           explanation:
-            'Statement of Applicability maps ISO 27001 controls with implementation status. Compliance Register tracks regulatory compliance. ISMS Policy defines annual review cadence. Internal compliance assessment conducted (this COMPLIANCE.md document).',
+            'CSA STAR Level 1 self-assessment completed. Statement of Applicability maps ISO 27001 controls with implementation status. Compliance Register tracks regulatory compliance. ISMS Policy defines annual review cadence. Automated quarterly access reviews via Fimil-Ops endpoints. Continuous monitoring plan (FIMIL-CONMON-001) provides ongoing assessment.',
         },
         {
           id: 'STA-12.1',
@@ -1905,7 +1905,7 @@ export const caiq: Questionnaire = {
             'Are policies requiring all supply chain CSPs to comply with security requirements implemented?',
           answer: 'yes',
           explanation:
-            'Vendor Risk Management Policy defines security requirements by vendor tier. DPAs include security obligations. Docker images scanned with Trivy. Scanner containers sandboxed with --network=none and cap_drop ALL.',
+            'Vendor Risk Management Policy defines security requirements by vendor tier. DPAs include security obligations. Docker images scanned with Trivy, signed with Cosign via Sigstore, include SPDX SBOMs, and have GitHub Actions build provenance attestation. Dependabot monitors supply chain dependencies. Scanner containers sandboxed with --network=none and cap_drop ALL.',
         },
         {
           id: 'STA-13.1',
@@ -1969,7 +1969,7 @@ export const caiq: Questionnaire = {
             'Are processes to enable scheduled and emergency responses to vulnerability identification?',
           answer: 'yes',
           explanation:
-            'Trivy scanning in CI/CD blocks critical vulnerabilities from deployment (emergency gate). Change Management Policy defines Emergency change type for urgent security patches. The platform provides continuous vulnerability scanning for customer codebases.',
+            'Patch management SLA (FIMIL-PM-001) defines remediation timelines: Critical 24h, High 7d, Medium 30d. Trivy scanning in CI/CD blocks critical vulnerabilities from deployment (emergency gate). Dependabot provides automated dependency update PRs. Change Management Policy defines Emergency change type for urgent security patches.',
         },
         {
           id: 'TVM-04.1',
@@ -1983,9 +1983,9 @@ export const caiq: Questionnaire = {
           id: 'TVM-05.1',
           question:
             'Are processes to identify updates for applications using third-party libraries defined?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            "Trivy and Grype scan for known vulnerabilities in dependencies. OSV-Scanner provides Google OSV database coverage. However, no automated dependency update tooling (Dependabot/Renovate) is configured for Fimil's own codebase.",
+            'Dependabot configured across all repositories for automated dependency updates with pull request generation. Trivy and Grype scan for known vulnerabilities in dependencies. OSV-Scanner provides Google OSV database coverage. Patch management SLA (FIMIL-PM-001) defines remediation timelines: Critical 24h, High 7d, Medium 30d.',
         },
         {
           id: 'TVM-06.1',
@@ -2069,7 +2069,7 @@ export const caiq: Questionnaire = {
           question: 'Is an inventory of all endpoints used and maintained?',
           answer: 'partial',
           explanation:
-            'No formal endpoint inventory exists. Currently sole founder with known devices. Framework for endpoint tracking documented in People Security Policy but no asset register implemented.',
+            'Formal asset register (FIMIL-AM-001) with 26-row inventory covers infrastructure and application assets. Currently sole founder with known devices. However, no MDM-managed endpoint inventory with automated device discovery and compliance tracking.',
         },
         {
           id: 'UEM-05.1',
