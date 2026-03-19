@@ -114,15 +114,6 @@ export default defineConfig({
       reportAvailable: false,
     },
     {
-      name: 'HIPAA',
-      status: 'planned',
-      description:
-        'Health Insurance Portability and Accountability Act. Planned to support healthcare customers requiring BAAs and PHI safeguards.',
-      certifiedDate: null,
-      auditBody: null,
-      reportAvailable: false,
-    },
-    {
       name: 'Cyber Essentials',
       status: 'in-progress',
       description:
