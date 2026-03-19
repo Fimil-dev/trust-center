@@ -1,0 +1,117 @@
+---
+import { allQuestionnaires } from '../questionnaires';
+
+const enabled = allQuestionnaires.filter((q) => q.enabled);
+
+const stats = enabled.map((q) => {
+  const all = q.sections.flatMap((s) => s.questions);
+  const total = all.length;
+  const yes = all.filter((q) => q.answer === 'yes').length;
+  const partial = all.filter((q) => q.answer === 'partial').length;
+  const no = all.filter((q) => q.answer === 'no').length;
+  const na = all.filter((q) => q.answer === 'na').length;
+  const applicable = total - na;
+  const coverage = applicable > 0 ? Math.round((yes / applicable) * 100) : 0;
+  return { ...q, total, yes, partial, no, na, coverage };
+});
+---
+
+{
+  stats.length > 0 && (
+    <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b border-gray-200 bg-gray-50/80 dark:border-gray-700 dark:bg-gray-800/60">
+            <th
+              class="px-4 py-3 text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+              style="font-family: var(--font-heading)"
+            >
+              Questionnaire
+            </th>
+            <th
+              class="px-4 py-3 text-right text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+              style="font-family: var(--font-heading)"
+            >
+              Questions
+            </th>
+            <th
+              class="px-4 py-3 text-right text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+              style="font-family: var(--font-heading)"
+            >
+              Yes
+            </th>
+            <th
+              class="px-4 py-3 text-right text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+              style="font-family: var(--font-heading)"
+            >
+              Partial
+            </th>
+            <th
+              class="px-4 py-3 text-right text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+              style="font-family: var(--font-heading)"
+            >
+              No
+            </th>
+            <th
+              class="px-4 py-3 text-right text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+              style="font-family: var(--font-heading)"
+            >
+              N/A
+            </th>
+            <th
+              class="px-4 py-3 text-right text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+              style="font-family: var(--font-heading)"
+            >
+              Coverage
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          {stats.map((q) => (
+            <tr class="transition-colors hover:bg-gray-50/50 dark:hover:bg-gray-800/30">
+              <td class="px-4 py-3">
+                <a
+                  href={`/questionnaires/${q.slug}/`}
+                  class="font-medium text-gray-900 transition-colors hover:underline dark:text-gray-100"
+                  style="color: var(--color-primary-500)"
+                >
+                  {q.name}
+                </a>
+                {q.version && (
+                  <span class="ml-2 text-xs text-gray-400 dark:text-gray-500">v{q.version}</span>
+                )}
+              </td>
+              <td class="px-4 py-3 text-right text-gray-600 tabular-nums dark:text-gray-300">
+                {q.total}
+              </td>
+              <td class="px-4 py-3 text-right text-emerald-600 tabular-nums dark:text-emerald-400">
+                {q.yes}
+              </td>
+              <td class="px-4 py-3 text-right text-amber-600 tabular-nums dark:text-amber-400">
+                {q.partial}
+              </td>
+              <td class="px-4 py-3 text-right text-red-600 tabular-nums dark:text-red-400">
+                {q.no}
+              </td>
+              <td class="px-4 py-3 text-right text-gray-400 tabular-nums dark:text-gray-500">
+                {q.na}
+              </td>
+              <td
+                class:list={[
+                  'px-4 py-3 text-right font-medium tabular-nums',
+                  q.coverage >= 70
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : q.coverage >= 40
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : 'text-red-600 dark:text-red-400',
+                ]}
+              >
+                {q.coverage}%
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}

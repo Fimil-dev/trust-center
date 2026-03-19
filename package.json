@@ -26,6 +26,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/node": "^25.5.0",
     "@typescript-eslint/parser": "^8.57.0",
     "eslint": "^9.39.4",
     "eslint-plugin-astro": "^1.6.0",

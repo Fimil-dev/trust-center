@@ -5,6 +5,7 @@ interface ControlItemData {
   title: string;
   description: string;
   status: 'implemented' | 'partial' | 'planned';
+  lastVerified?: string | undefined;
 }
 
 interface Props {
@@ -43,7 +44,12 @@ const implementedCount = items.filter((i) => i.status === 'implemented').length;
   <div class="divide-y divide-gray-100 dark:divide-gray-800/60">
     {
       items.map((item) => (
-        <ControlItem title={item.title} description={item.description} status={item.status} />
+        <ControlItem
+          title={item.title}
+          description={item.description}
+          status={item.status}
+          lastVerified={item.lastVerified}
+        />
       ))
     }
   </div>

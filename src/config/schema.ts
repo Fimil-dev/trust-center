@@ -38,12 +38,20 @@ const frameworkSchema = z.object({
   certifiedDate: z.string().nullable().default(null),
   auditBody: z.string().nullable().default(null),
   reportAvailable: z.boolean().default(false),
+  lastVerified: z.string().optional(),
 });
 
 const controlItemSchema = z.object({
   title: z.string(),
   description: z.string(),
   status: z.enum(['implemented', 'partial', 'planned']),
+  lastVerified: z.string().optional(),
+});
+
+const changelogEntrySchema = z.object({
+  date: z.string(),
+  title: z.string(),
+  description: z.string().optional(),
 });
 
 const controlDomainSchema = z.object({
@@ -110,6 +118,7 @@ export const trustConfigSchema = z.object({
   lastReviewed: z.string().optional(),
   subprocessorsLastUpdated: z.string().optional(),
   questionnaires: z.array(questionnaireMetaSchema).default([]),
+  changelog: z.array(changelogEntrySchema).default([]),
 });
 
 export type TrustConfig = z.infer<typeof trustConfigSchema>;

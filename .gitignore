@@ -5,3 +5,5 @@ dist/
 .env.*
 *.log
 .DS_Store
+public/downloads/
+.claude/

@@ -8,6 +8,8 @@ import ControlDomain from '../components/ControlDomain.astro';
 import SubprocessorTable from '../components/SubprocessorTable.astro';
 import DocumentGrid from '../components/DocumentGrid.astro';
 import QuestionnaireCard from '../components/QuestionnaireCard.astro';
+import QuestionnaireComparison from '../components/QuestionnaireComparison.astro';
+import Changelog from '../components/Changelog.astro';
 import ContactCta from '../components/ContactCta.astro';
 import Footer from '../components/Footer.astro';
 
@@ -89,6 +91,7 @@ const heroStats = [
                   auditBody={fw.auditBody}
                   reportAvailable={fw.reportAvailable}
                   securityEmail={site.company.securityEmail}
+                  lastVerified={fw.lastVerified}
                 />
               ))}
             </div>
@@ -203,6 +206,9 @@ const heroStats = [
               Browse our completed security questionnaires. Each assessment is pre-filled with our
               current security posture.
             </p>
+            <div class="mt-6">
+              <QuestionnaireComparison />
+            </div>
             <div class="mt-6 grid gap-4 sm:grid-cols-2">
               {site.questionnaires
                 .filter((q) => q.enabled)
@@ -222,7 +228,35 @@ const heroStats = [
       )
     }
 
-    {/* 06 — Contact */}
+    {/* 06 — Changelog */}
+    {
+      site.changelog && site.changelog.length > 0 && (
+        <section
+          id="changelog"
+          class="reveal border-b border-gray-200 py-16 sm:py-24 dark:border-gray-800"
+        >
+          <div class="mx-auto max-w-5xl px-6">
+            <p
+              class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
+              style="font-family: var(--font-heading)"
+            >
+              06 — Changelog
+            </p>
+            <h2
+              class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
+              style="font-family: var(--font-heading)"
+            >
+              Recent Updates
+            </h2>
+            <div class="mt-6">
+              <Changelog entries={site.changelog} />
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {/* 07 — Contact */}
     <section id="contact" class="reveal">
       <div class="mx-auto max-w-5xl px-6">
         <ContactCta
