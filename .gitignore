@@ -7,3 +7,5 @@ dist/
 .DS_Store
 public/downloads/
 .claude/
+
+CLAUDE.md
