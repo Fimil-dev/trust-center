@@ -1,6 +1,6 @@
 ---
 import TrustLayout from '../layouts/TrustLayout.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
+import StickyNav from '../components/StickyNav.astro';
 import Hero from '../components/Hero.astro';
 import ControlStatusBar from '../components/ControlStatusBar.astro';
 import FrameworkCard from '../components/FrameworkCard.astro';
@@ -49,7 +49,7 @@ const heroStats = [
   primaryColor={site.theme.colors.primary}
   lastReviewed={site.lastReviewed}
 >
-  <ThemeToggle />
+  <StickyNav companyName={site.company.name} logo={site.company.logo} />
 
   <main>
     <Hero companyName={site.company.name} stats={heroStats} />
