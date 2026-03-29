@@ -37,6 +37,21 @@ const heroStats = [
   { value: site.subprocessors.length, label: 'Vendors assessed' },
   { value: docCount, label: 'Policies published' },
 ];
+
+// Dynamic section numbering
+const visibleSections: string[] = [];
+if (site.frameworks.length > 0) visibleSections.push('compliance');
+if (site.controls.length > 0) visibleSections.push('controls');
+visibleSections.push('architecture');
+if (site.subprocessors.length > 0) visibleSections.push('subprocessors');
+visibleSections.push('documents');
+if (site.questionnaires.filter((q) => q.enabled).length > 0) visibleSections.push('questionnaires');
+if (site.changelog?.length > 0) visibleSections.push('changelog');
+const sn = (key: string) => String(visibleSections.indexOf(key) + 1).padStart(2, '0');
+
+// Download URL
+const downloadSlug = site.company.name.toLowerCase().replace(/\s+/g, '-');
+const downloadUrl = `/downloads/${downloadSlug}-compliance-report.pdf`;
 ---
 
 <TrustLayout
@@ -53,7 +68,7 @@ const heroStats = [
   <StickyNav companyName={site.company.name} logo={site.company.logo} />
 
   <main>
-    <Hero companyName={site.company.name} stats={heroStats} />
+    <Hero companyName={site.company.name} stats={heroStats} downloadUrl={downloadUrl} />
 
     {/* Status summary */}
     {
@@ -74,7 +89,7 @@ const heroStats = [
               class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
               style="font-family: var(--font-heading)"
             >
-              01 — Compliance
+              {sn('compliance')} — Compliance
             </p>
             <h2
               class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
@@ -113,7 +128,7 @@ const heroStats = [
               class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
               style="font-family: var(--font-heading)"
             >
-              02 — Security Controls
+              {sn('controls')} — Security Controls
             </p>
             <h2
               class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
@@ -141,7 +156,7 @@ const heroStats = [
           class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
           style="font-family: var(--font-heading)"
         >
-          03 — Architecture
+          {sn('architecture')} — Architecture
         </p>
         <h2
           class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
@@ -171,7 +186,7 @@ const heroStats = [
               class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
               style="font-family: var(--font-heading)"
             >
-              04 — Subprocessors
+              {sn('subprocessors')} — Subprocessors
             </p>
             <h2
               class="mb-8 text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
@@ -199,7 +214,7 @@ const heroStats = [
           class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
           style="font-family: var(--font-heading)"
         >
-          05 — Documents
+          {sn('documents')} — Documents
         </p>
         <h2
           class="mb-8 text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
@@ -223,7 +238,7 @@ const heroStats = [
               class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
               style="font-family: var(--font-heading)"
             >
-              06 — Questionnaires
+              {sn('questionnaires')} — Questionnaires
             </p>
             <h2
               class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
@@ -269,7 +284,7 @@ const heroStats = [
               class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
               style="font-family: var(--font-heading)"
             >
-              07 — Changelog
+              {sn('changelog')} — Changelog
             </p>
             <h2
               class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"

@@ -33,7 +33,7 @@ const entries = (Object.entries(documents) as [DocKey, string | null | undefined
 ---
 
 {
-  entries.length > 0 && (
+  entries.length > 0 ? (
     <div class="grid grid-cols-1 gap-x-12 gap-y-1 sm:grid-cols-2">
       {entries.map((doc) => (
         <a
@@ -49,5 +49,7 @@ const entries = (Object.entries(documents) as [DocKey, string | null | undefined
         </a>
       ))}
     </div>
+  ) : (
+    <p class="text-sm text-gray-400 dark:text-gray-500">No documents published yet.</p>
   )
 }

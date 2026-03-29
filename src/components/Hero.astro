@@ -8,9 +8,15 @@ interface Props {
   companyName: string;
   tagline?: string;
   stats?: Stat[];
+  downloadUrl?: string;
 }
 
-const { companyName, tagline, stats = [] } = Astro.props;
+const {
+  companyName,
+  tagline,
+  stats = [],
+  downloadUrl = '/downloads/compliance-report.pdf',
+} = Astro.props;
 
 const displayTagline = tagline || `Security and compliance at ${companyName}`;
 ---
@@ -36,7 +42,7 @@ const displayTagline = tagline || `Security and compliance at ${companyName}`;
                 style="font-family: var(--font-heading)"
                 data-target={stat.value}
               >
-                0
+                &mdash;
               </span>
               <p class="mt-1 text-sm text-gray-400 dark:text-gray-500">{stat.label}</p>
             </div>
@@ -46,7 +52,7 @@ const displayTagline = tagline || `Security and compliance at ${companyName}`;
     }
     <div class="mt-8">
       <a
-        href="/downloads/fimil-compliance-report.pdf"
+        href={downloadUrl}
         download
         class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
       >
