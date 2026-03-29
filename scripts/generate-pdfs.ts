@@ -14,12 +14,24 @@ import autoTable from 'jspdf-autotable';
 import { allQuestionnaires } from '../src/questionnaires/index.js';
 import type { Questionnaire } from '../src/questionnaires/types.js';
 
-// Import config (we need to extract the default export)
-import configModule from '../trust.config.js';
-const config = configModule as any;
+// Import config
+import config from '../trust.config.js';
+import type { TrustConfig } from '../src/config/schema.js';
+
+const typedConfig: TrustConfig = config;
 
 const OUTPUT_DIR = path.join(process.cwd(), 'public', 'downloads');
-const PRIMARY_COLOR: [number, number, number] = [124, 58, 237]; // #7C3AED
+
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace('#', '');
+  return [
+    parseInt(h.substring(0, 2), 16),
+    parseInt(h.substring(2, 4), 16),
+    parseInt(h.substring(4, 6), 16),
+  ];
+}
+
+const PRIMARY_COLOR = hexToRgb(typedConfig.theme.colors.primary);
 const DARK_TEXT: [number, number, number] = [31, 41, 55];
 const MUTED_TEXT: [number, number, number] = [107, 114, 128];
 const GREEN: [number, number, number] = [16, 185, 129];
@@ -27,11 +39,19 @@ const AMBER: [number, number, number] = [245, 158, 11];
 const RED: [number, number, number] = [239, 68, 68];
 const GRAY: [number, number, number] = [156, 163, 175];
 
+const companyName = typedConfig.company.legalName || typedConfig.company.name;
+const companyWebsite = typedConfig.company.website ?? '';
+const securityEmail = typedConfig.company.securityEmail;
+
 const today = new Date().toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
+
+function safePct(n: number, total: number, decimals: number = 1): string {
+  return total > 0 ? ((n / total) * 100).toFixed(decimals) : '0';
+}
 
 function answerColor(answer: string): [number, number, number] {
   switch (answer) {
@@ -49,7 +69,7 @@ function answerColor(answer: string): [number, number, number] {
 function addHeader(doc: jsPDF, title: string) {
   doc.setFontSize(8);
   doc.setTextColor(...MUTED_TEXT);
-  doc.text('Fimil Inc.', 14, 10);
+  doc.text(companyName, 14, 10);
   doc.text(title, doc.internal.pageSize.width - 14, 10, { align: 'right' });
   doc.setDrawColor(230, 230, 230);
   doc.line(14, 13, doc.internal.pageSize.width - 14, 13);
@@ -59,7 +79,7 @@ function addFooter(doc: jsPDF, pageNum: number, totalPages: number) {
   const pageHeight = doc.internal.pageSize.height;
   doc.setFontSize(7);
   doc.setTextColor(...MUTED_TEXT);
-  doc.text(`Generated from trust.fimil.dev`, 14, pageHeight - 8);
+  doc.text(`Generated from ${companyWebsite}`, 14, pageHeight - 8);
   doc.text(today, doc.internal.pageSize.width / 2, pageHeight - 8, {
     align: 'center',
   });
@@ -92,22 +112,30 @@ function addCoverPage(
 
   // Logo
   const logoPath = path.join(process.cwd(), 'public', 'logo-icon.png');
-  const logoData = fs.readFileSync(logoPath);
-  const logoBase64 = logoData.toString('base64');
-  const logoSize = 24;
-  doc.addImage(
-    `data:image/png;base64,${logoBase64}`,
-    'PNG',
-    centerX - logoSize / 2,
-    30,
-    logoSize,
-    logoSize,
-  );
+  let logoBase64: string | null = null;
+  try {
+    const logoData = fs.readFileSync(logoPath);
+    logoBase64 = logoData.toString('base64');
+  } catch {
+    console.warn(`  Warning: Logo not found at ${logoPath}, skipping logo in PDF`);
+  }
+
+  if (logoBase64) {
+    const logoSize = 24;
+    doc.addImage(
+      `data:image/png;base64,${logoBase64}`,
+      'PNG',
+      centerX - logoSize / 2,
+      30,
+      logoSize,
+      logoSize,
+    );
+  }
 
   // Company name below logo
   doc.setFontSize(14);
   doc.setTextColor(...MUTED_TEXT);
-  doc.text('FIMIL, INC.', centerX, 62, { align: 'center' });
+  doc.text(companyName.toUpperCase(), centerX, 62, { align: 'center' });
 
   // Title
   doc.setFontSize(28);
@@ -134,8 +162,8 @@ function addCoverPage(
   // Bottom info
   doc.setFontSize(8);
   doc.setTextColor(...MUTED_TEXT);
-  doc.text('trust.fimil.dev', centerX, 270, { align: 'center' });
-  doc.text('security@fimil.dev', centerX, 276, { align: 'center' });
+  doc.text(companyWebsite, centerX, 270, { align: 'center' });
+  doc.text(securityEmail, centerX, 276, { align: 'center' });
 }
 
 function generateQuestionnairePDF(q: Questionnaire): void {
@@ -162,17 +190,15 @@ function generateQuestionnairePDF(q: Questionnaire): void {
   const noCount = allQuestions.filter((q) => q.answer === 'no').length;
   const naCount = allQuestions.filter((q) => q.answer === 'na').length;
 
-  const pct = (n: number) => ((n / total) * 100).toFixed(1);
-
   // Stats table
   autoTable(doc, {
     startY: y,
     head: [['Answer', 'Count', 'Percentage']],
     body: [
-      ['Yes', yesCount.toString(), `${pct(yesCount)}%`],
-      ['Partial', partialCount.toString(), `${pct(partialCount)}%`],
-      ['No', noCount.toString(), `${pct(noCount)}%`],
-      ['N/A', naCount.toString(), `${pct(naCount)}%`],
+      ['Yes', yesCount.toString(), `${safePct(yesCount, total)}%`],
+      ['Partial', partialCount.toString(), `${safePct(partialCount, total)}%`],
+      ['No', noCount.toString(), `${safePct(noCount, total)}%`],
+      ['N/A', naCount.toString(), `${safePct(naCount, total)}%`],
       ['Total', total.toString(), '100%'],
     ],
     theme: 'grid',
@@ -259,7 +285,7 @@ function generateComplianceReport(): void {
   autoTable(doc, {
     startY: 28,
     head: [['Framework', 'Status', 'Description']],
-    body: (config.frameworks || []).map((f: any) => [
+    body: typedConfig.frameworks.map((f) => [
       f.name,
       f.status.replace('-', ' ').toUpperCase(),
       f.description || '-',
@@ -285,13 +311,13 @@ function generateComplianceReport(): void {
   });
 
   // Security Controls by Domain
-  for (const domain of config.controls || []) {
+  for (const domain of typedConfig.controls) {
     doc.addPage();
     doc.setFontSize(14);
     doc.setTextColor(...PRIMARY_COLOR);
     doc.text(domain.domain, 14, 20);
 
-    const implemented = domain.items.filter((i: any) => i.status === 'implemented').length;
+    const implemented = domain.items.filter((i) => i.status === 'implemented').length;
     doc.setFontSize(9);
     doc.setTextColor(...MUTED_TEXT);
     doc.text(`${implemented}/${domain.items.length} controls implemented`, 14, 27);
@@ -299,11 +325,7 @@ function generateComplianceReport(): void {
     autoTable(doc, {
       startY: 32,
       head: [['Control', 'Status', 'Description']],
-      body: domain.items.map((item: any) => [
-        item.title,
-        item.status.toUpperCase(),
-        item.description,
-      ]),
+      body: domain.items.map((item) => [item.title, item.status.toUpperCase(), item.description]),
       theme: 'striped',
       headStyles: { fillColor: PRIMARY_COLOR, fontSize: 9 },
       bodyStyles: { fontSize: 8, cellPadding: 2 },
@@ -333,7 +355,7 @@ function generateComplianceReport(): void {
   autoTable(doc, {
     startY: 28,
     head: [['Vendor', 'Purpose', 'Location']],
-    body: (config.subprocessors || []).map((s: any) => [s.name, s.purpose, s.location]),
+    body: typedConfig.subprocessors.map((s) => [s.name, s.purpose, s.location]),
     theme: 'striped',
     headStyles: { fillColor: PRIMARY_COLOR, fontSize: 9 },
     bodyStyles: { fontSize: 9, cellPadding: 3 },
@@ -363,9 +385,9 @@ function generateComplianceReport(): void {
       return [
         `${q.name}${q.version ? ` v${q.version}` : ''}`,
         total.toString(),
-        `${yes} (${((yes / total) * 100).toFixed(0)}%)`,
-        `${partial} (${((partial / total) * 100).toFixed(0)}%)`,
-        `${no} (${((no / total) * 100).toFixed(0)}%)`,
+        `${yes} (${safePct(yes, total, 0)}%)`,
+        `${partial} (${safePct(partial, total, 0)}%)`,
+        `${no} (${safePct(no, total, 0)}%)`,
         na.toString(),
       ];
     });
@@ -385,7 +407,7 @@ function generateComplianceReport(): void {
   }
 
   // Published Documents
-  const docs = config.documents || {};
+  const docs = typedConfig.documents;
   const docEntries = Object.entries(docs).filter(([_, url]) => url != null) as [string, string][];
   if (docEntries.length > 0) {
     const y = (doc as any).lastAutoTable ? (doc as any).lastAutoTable.finalY + 20 : 28;
@@ -421,23 +443,29 @@ function generateComplianceReport(): void {
 
   addHeadersAndFooters(doc, 'Compliance & Security Report');
 
-  const filePath = path.join(OUTPUT_DIR, 'fimil-compliance-report.pdf');
+  const slug = typedConfig.company.name.toLowerCase().replace(/\s+/g, '-');
+  const filePath = path.join(OUTPUT_DIR, `${slug}-compliance-report.pdf`);
   fs.writeFileSync(filePath, Buffer.from(doc.output('arraybuffer')));
   console.log(`  Generated: ${filePath}`);
 }
 
 // Main
-fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+try {
+  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
-console.log('Generating PDFs...');
+  console.log('Generating PDFs...');
 
-// Questionnaire PDFs
-for (const q of allQuestionnaires) {
-  if (!q.enabled || q.sections.length === 0) continue;
-  generateQuestionnairePDF(q);
+  // Questionnaire PDFs
+  for (const q of allQuestionnaires) {
+    if (!q.enabled || q.sections.length === 0) continue;
+    generateQuestionnairePDF(q);
+  }
+
+  // Compliance report
+  generateComplianceReport();
+
+  console.log('PDF generation complete.');
+} catch (err) {
+  console.error('PDF generation failed:', err);
+  process.exit(1);
 }
-
-// Compliance report
-generateComplianceReport();
-
-console.log('PDF generation complete.');

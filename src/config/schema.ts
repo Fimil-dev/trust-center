@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const companySchema = z.object({
-  name: z.string(),
+  name: z.string().min(1),
   legalName: z.string().optional(),
   logo: z.string().default('/logo.svg'),
   favicon: z.string().default('/favicon.svg'),
@@ -10,13 +10,17 @@ const companySchema = z.object({
   privacyEmail: z.string().email().optional(),
 });
 
+const hexColor = z
+  .string()
+  .regex(/^#[0-9a-fA-F]{6}$/, 'Must be a 6-digit hex color (e.g., #7C3AED)');
+
 const colorsSchema = z.object({
-  primary: z.string().default('#7C3AED'),
-  surface: z.string().optional(),
-  surfaceAlt: z.string().optional(),
-  text: z.string().optional(),
-  textMuted: z.string().optional(),
-  border: z.string().optional(),
+  primary: hexColor.default('#7C3AED'),
+  surface: hexColor.optional(),
+  surfaceAlt: hexColor.optional(),
+  text: hexColor.optional(),
+  textMuted: hexColor.optional(),
+  border: hexColor.optional(),
 });
 
 const fontsSchema = z.object({
@@ -32,7 +36,7 @@ const themeSchema = z.object({
 });
 
 const frameworkSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1),
   status: z.enum(['certified', 'in-progress', 'planned']),
   description: z.string().optional(),
   certifiedDate: z.string().nullable().default(null),
@@ -42,28 +46,28 @@ const frameworkSchema = z.object({
 });
 
 const controlItemSchema = z.object({
-  title: z.string(),
-  description: z.string(),
+  title: z.string().min(1),
+  description: z.string().min(1),
   status: z.enum(['implemented', 'partial', 'planned']),
   lastVerified: z.string().optional(),
 });
 
 const changelogEntrySchema = z.object({
-  date: z.string(),
-  title: z.string(),
+  date: z.string().min(1),
+  title: z.string().min(1),
   description: z.string().optional(),
 });
 
 const controlDomainSchema = z.object({
-  domain: z.string(),
+  domain: z.string().min(1),
   icon: z.string().default('shield'),
   items: z.array(controlItemSchema),
 });
 
 const subprocessorSchema = z.object({
-  name: z.string(),
-  purpose: z.string(),
-  location: z.string(),
+  name: z.string().min(1),
+  purpose: z.string().min(1),
+  location: z.string().min(1),
   dpaUrl: z.string().url().nullable().default(null),
 });
 
@@ -79,7 +83,7 @@ const documentsSchema = z.object({
 
 const ctaSchema = z.object({
   label: z.string().default('Contact Security Team'),
-  href: z.string(),
+  href: z.string().min(1),
 });
 
 const contactSchema = z.object({
@@ -97,9 +101,9 @@ const seoSchema = z.object({
 });
 
 const questionnaireMetaSchema = z.object({
-  name: z.string(),
-  slug: z.string(),
-  description: z.string(),
+  name: z.string().min(1),
+  slug: z.string().min(1),
+  description: z.string().min(1),
   enabled: z.boolean().default(true),
   questionCount: z.number().int().nonnegative(),
   sectionCount: z.number().int().nonnegative(),

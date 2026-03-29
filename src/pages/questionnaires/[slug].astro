@@ -1,6 +1,6 @@
 ---
 import TrustLayout from '../../layouts/TrustLayout.astro';
-import ThemeToggle from '../../components/ThemeToggle.astro';
+import StickyNav from '../../components/StickyNav.astro';
 import AnswerBadge from '../../components/AnswerBadge.astro';
 import Footer from '../../components/Footer.astro';
 
@@ -48,7 +48,7 @@ const pageTitle = `${questionnaire.name} — ${site.company.name} Trust Center`;
   primaryColor={site.theme.colors.primary}
   lastReviewed={site.lastReviewed}
 >
-  <ThemeToggle />
+  <StickyNav companyName={site.company.name} logo={site.company.logo} />
 
   <main class="py-16 sm:py-24">
     <div class="mx-auto max-w-5xl px-6">
@@ -100,6 +100,7 @@ const pageTitle = `${questionnaire.name} — ${site.company.name} Trust Center`;
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
             ><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline
               points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg
           >
