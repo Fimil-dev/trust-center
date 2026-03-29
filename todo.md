@@ -18,7 +18,7 @@
 - [x] **Add string length and date format validation to Zod schema** — `src/config/schema.ts`: All string fields lack `min()`/`max()` constraints. Date fields (`lastVerified`, `certifiedDate`, changelog `date`) have no ISO 8601 format validation. Color fields don't validate hex format. `[Schema]`
 - [x] **Fix ControlStatusBar missing "planned" segment in progress bar** — Legend shows a gray dot for "planned" controls, but the progress bar only renders segments for "implemented" and "partial". Add a third bar segment so visualization matches legend. `[UI Bug]`
 - [x] **Add Google Fonts fallback font families** — `global.css` defines `--font-heading` and `--font-body` with no system font fallbacks. If Google Fonts fail to load, layout will reflow. Add fallbacks: `'IBM Plex Mono', 'Courier New', monospace` and `'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`. `[Performance]`
-- [ ] **Create visual data flow diagram** — Multiple questionnaires (MVSP, CAIQ, VSA Core, VSA Full) note "No standalone visual data flow diagram maintained yet." A visual diagram would satisfy compliance requirements and improve trust center value. `[Content]`
+- [x] **Create visual data flow diagram** — Multiple questionnaires (MVSP, CAIQ, VSA Core, VSA Full) note "No standalone visual data flow diagram maintained yet." A visual diagram would satisfy compliance requirements and improve trust center value. `[Content]`
 
 ## P2 — Medium (next sprint)
 

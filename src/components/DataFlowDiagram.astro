@@ -1,0 +1,207 @@
+---
+// Visual data flow diagram showing how data moves through the Fimil platform.
+// Satisfies MVSP 3.2, CAIQ DSP-05.1, VSA Core SI-5c, VSA Full SO-5d.
+---
+
+<div class="space-y-3 text-xs" style="font-family: var(--font-heading)">
+  {/* Data Sources */}
+  <div>
+    <p class="mb-2 text-[10px] tracking-widest text-gray-400 uppercase dark:text-gray-500">
+      Data Sources
+    </p>
+    <div class="grid grid-cols-3 gap-2">
+      <div
+        class="rounded-md border border-gray-200 bg-white px-3 py-2.5 text-center dark:border-gray-700 dark:bg-gray-900"
+      >
+        <p class="font-medium text-gray-700 dark:text-gray-300">Customer Repos</p>
+        <p class="mt-0.5 text-[10px] text-gray-400 dark:text-gray-500">GitHub · GitLab</p>
+      </div>
+      <div
+        class="rounded-md border border-gray-200 bg-white px-3 py-2.5 text-center dark:border-gray-700 dark:bg-gray-900"
+      >
+        <p class="font-medium text-gray-700 dark:text-gray-300">Users</p>
+        <p class="mt-0.5 text-[10px] text-gray-400 dark:text-gray-500">Browser · CLI · API</p>
+      </div>
+      <div
+        class="rounded-md border border-gray-200 bg-white px-3 py-2.5 text-center dark:border-gray-700 dark:bg-gray-900"
+      >
+        <p class="font-medium text-gray-700 dark:text-gray-300">CI/CD Webhooks</p>
+        <p class="mt-0.5 text-[10px] text-gray-400 dark:text-gray-500">Push · PR events</p>
+      </div>
+    </div>
+  </div>
+
+  {/* Arrow */}
+  <div class="flex justify-center text-gray-300 dark:text-gray-600">
+    <div class="flex flex-col items-center">
+      <div class="h-3 w-px bg-current"></div>
+      <span>&#9660;</span>
+    </div>
+  </div>
+
+  {/* Security boundary: Edge */}
+  <div
+    class="rounded-lg border-2 border-dashed border-purple-300 bg-purple-50/50 p-3 dark:border-purple-800 dark:bg-purple-950/20"
+  >
+    <p class="mb-2 text-[10px] tracking-widest text-purple-500 uppercase dark:text-purple-400">
+      Edge — TLS 1.2+ encrypted
+    </p>
+    <div
+      class="rounded-md border border-purple-200 bg-white px-3 py-2 text-center dark:border-purple-800 dark:bg-gray-900"
+    >
+      <p class="font-medium text-gray-700 dark:text-gray-300">Cloudflare</p>
+      <p class="mt-0.5 text-[10px] text-gray-400 dark:text-gray-500">WAF · CDN · DDoS protection</p>
+    </div>
+  </div>
+
+  {/* Arrow */}
+  <div class="flex justify-center text-gray-300 dark:text-gray-600">
+    <div class="flex flex-col items-center">
+      <div class="h-3 w-px bg-current"></div>
+      <span>&#9660;</span>
+    </div>
+  </div>
+
+  {/* Platform boundary */}
+  <div
+    class="rounded-lg border-2 border-dashed border-purple-300 bg-purple-50/50 p-3 dark:border-purple-800 dark:bg-purple-950/20"
+  >
+    <p class="mb-3 text-[10px] tracking-widest text-purple-500 uppercase dark:text-purple-400">
+      Fimil Platform — Kubernetes · DigitalOcean
+    </p>
+
+    {/* API + Scanner Pipeline */}
+    <div class="grid gap-2 sm:grid-cols-3">
+      <div
+        class="rounded-md border border-gray-200 bg-white px-3 py-2.5 text-center dark:border-gray-700 dark:bg-gray-900"
+      >
+        <p class="font-medium text-gray-700 dark:text-gray-300">API Gateway</p>
+        <p class="mt-0.5 text-[10px] text-gray-400 dark:text-gray-500">Auth · RBAC · Rate limits</p>
+      </div>
+      <div
+        class="rounded-md border border-gray-200 bg-white px-3 py-2.5 text-center dark:border-gray-700 dark:bg-gray-900"
+      >
+        <p class="font-medium text-gray-700 dark:text-gray-300">Task Queue</p>
+        <p class="mt-0.5 text-[10px] text-gray-400 dark:text-gray-500">Celery · Redis</p>
+      </div>
+      <div
+        class="rounded-md border border-emerald-300 bg-emerald-50 px-3 py-2.5 text-center dark:border-emerald-800 dark:bg-emerald-950/30"
+      >
+        <p class="font-medium text-emerald-700 dark:text-emerald-300">Scanners</p>
+        <p class="mt-0.5 text-[10px] text-emerald-500 dark:text-emerald-400">
+          Ephemeral · --network=none
+        </p>
+        <p class="text-[10px] text-emerald-500 dark:text-emerald-400">Code never persisted</p>
+      </div>
+    </div>
+
+    {/* Arrow to storage */}
+    <div class="flex justify-center py-2 text-gray-300 dark:text-gray-600">
+      <div class="flex flex-col items-center">
+        <div class="h-2 w-px bg-current"></div>
+        <span class="text-[10px]">scan results &#9660;</span>
+      </div>
+    </div>
+
+    {/* Storage layer */}
+    <div class="grid gap-2 sm:grid-cols-2">
+      <div
+        class="rounded-md border border-gray-200 bg-white px-3 py-2.5 dark:border-gray-700 dark:bg-gray-900"
+      >
+        <p class="font-medium text-gray-700 dark:text-gray-300">PostgreSQL</p>
+        <p class="mt-0.5 text-[10px] text-gray-400 dark:text-gray-500">AES-256 at rest</p>
+        <p class="text-[10px] text-gray-400 dark:text-gray-500">Fernet field-level encryption</p>
+        <p class="text-[10px] text-gray-400 dark:text-gray-500">Row-level tenant isolation</p>
+      </div>
+      <div
+        class="rounded-md border border-gray-200 bg-white px-3 py-2.5 dark:border-gray-700 dark:bg-gray-900"
+      >
+        <p class="font-medium text-gray-700 dark:text-gray-300">Redis</p>
+        <p class="mt-0.5 text-[10px] text-gray-400 dark:text-gray-500">
+          Session cache · Task broker
+        </p>
+        <p class="text-[10px] text-gray-400 dark:text-gray-500">No persistent PII</p>
+      </div>
+    </div>
+  </div>
+
+  {/* Arrows to external */}
+  <div class="flex justify-around text-gray-300 dark:text-gray-600">
+    <div class="flex flex-col items-center">
+      <div class="h-3 w-px bg-current"></div>
+      <span>&#9660;</span>
+    </div>
+    <div class="flex flex-col items-center">
+      <div class="h-3 w-px bg-current"></div>
+      <span>&#9660;</span>
+    </div>
+  </div>
+
+  {/* External flows */}
+  <div class="grid gap-2 sm:grid-cols-2">
+    <div>
+      <p class="mb-2 text-[10px] tracking-widest text-gray-400 uppercase dark:text-gray-500">
+        Subprocessors
+      </p>
+      <div class="space-y-1.5">
+        <div
+          class="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900"
+        >
+          <span class="text-gray-700 dark:text-gray-300">Stripe</span>
+          <span class="text-[10px] text-gray-400 dark:text-gray-500">Billing</span>
+        </div>
+        <div
+          class="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900"
+        >
+          <span class="text-gray-700 dark:text-gray-300">Resend</span>
+          <span class="text-[10px] text-gray-400 dark:text-gray-500">Email</span>
+        </div>
+        <div
+          class="flex items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900"
+        >
+          <span class="text-gray-700 dark:text-gray-300">PostHog</span>
+          <span class="text-[10px] text-gray-400 dark:text-gray-500">Analytics · consent-gated</span
+          >
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="mb-2 text-[10px] tracking-widest text-gray-400 uppercase dark:text-gray-500">
+        Backup &amp; Archive
+      </p>
+      <div
+        class="rounded-md border border-gray-200 bg-white px-3 py-2.5 dark:border-gray-700 dark:bg-gray-900"
+      >
+        <p class="font-medium text-gray-700 dark:text-gray-300">Offsite S3</p>
+        <p class="mt-0.5 text-[10px] text-gray-400 dark:text-gray-500">AES-256 encrypted</p>
+        <p class="text-[10px] text-gray-400 dark:text-gray-500">Nightly automated backups</p>
+        <p class="text-[10px] text-gray-400 dark:text-gray-500">Configurable retention</p>
+      </div>
+    </div>
+  </div>
+
+  {/* Legend */}
+  <div
+    class="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 border-t border-gray-100 pt-3 text-[10px] text-gray-400 dark:border-gray-800 dark:text-gray-500"
+  >
+    <span class="flex items-center gap-1.5">
+      <span
+        class="inline-block h-2 w-3 rounded-sm border-2 border-dashed border-purple-300 dark:border-purple-700"
+      ></span>
+      Security boundary
+    </span>
+    <span class="flex items-center gap-1.5">
+      <span
+        class="inline-block h-2 w-3 rounded-sm border border-emerald-300 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/30"
+      ></span>
+      Ephemeral / isolated
+    </span>
+    <span class="flex items-center gap-1.5">
+      <span
+        class="inline-block h-2 w-3 rounded-sm border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900"
+      ></span>
+      Component
+    </span>
+    <span>All connections encrypted via TLS 1.2+</span>
+  </div>
+</div>

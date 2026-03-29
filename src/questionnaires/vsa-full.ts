@@ -87,9 +87,9 @@ export const vsaFull: Questionnaire = {
         {
           id: 'SO-5d',
           question: 'Do you have a Data Flow Diagram available for review?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Architecture and data flow documented in internal technical documentation covering scanner pipeline and storage layers. No standalone visual data flow diagram maintained yet.',
+            'Visual data flow diagram published on the trust center showing data ingestion, scanner pipeline (ephemeral, network-isolated), encrypted storage layers, subprocessor data flows, and security boundaries. Architecture also documented in internal technical documentation.',
         },
         {
           id: 'SO-5e',

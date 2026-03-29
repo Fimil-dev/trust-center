@@ -838,9 +838,9 @@ export const caiq: Questionnaire = {
           id: 'DSP-05.1',
           question:
             'Is data flow documentation created to identify what data is processed and where?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Data Governance Policy documents data categories and handling. Architecture documentation describes data flows between components. However, no formal data flow diagram mapping all personal data processing activities exists.',
+            'Visual data flow diagram published on the trust center maps all data processing activities: data sources (customer repos, users, webhooks), processing (ephemeral scanners, task queue), storage (encrypted PostgreSQL, Redis), subprocessor flows (Stripe, Resend, PostHog), and backup/archive. Data Governance Policy documents data categories and handling.',
         },
         {
           id: 'DSP-05.2',
