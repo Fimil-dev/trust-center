@@ -244,9 +244,9 @@ function generateQuestionnairePDF(q: Questionnaire): void {
       bodyStyles: { fontSize: 7, cellPadding: 2 },
       columnStyles: {
         0: { cellWidth: 14 },
-        1: { cellWidth: 52 },
+        1: { cellWidth: 50 },
         2: { cellWidth: 16, halign: 'center', fontStyle: 'bold' },
-        3: { cellWidth: 87 },
+        3: { cellWidth: 80 },
       },
       margin: { left: 14, right: 14 },
       didParseCell: (data: any) => {
@@ -296,7 +296,7 @@ function generateComplianceReport(): void {
     columnStyles: {
       0: { cellWidth: 35, fontStyle: 'bold' },
       1: { cellWidth: 25, halign: 'center' },
-      2: { cellWidth: 115 },
+      2: { cellWidth: 100 },
     },
     margin: { left: 14, right: 14 },
     didParseCell: (data: any) => {
@@ -332,7 +332,7 @@ function generateComplianceReport(): void {
       columnStyles: {
         0: { cellWidth: 35, fontStyle: 'bold' },
         1: { cellWidth: 22, halign: 'center' },
-        2: { cellWidth: 118 },
+        2: { cellWidth: 103 },
       },
       margin: { left: 14, right: 14 },
       didParseCell: (data: any) => {
@@ -361,7 +361,7 @@ function generateComplianceReport(): void {
     bodyStyles: { fontSize: 9, cellPadding: 3 },
     columnStyles: {
       0: { cellWidth: 35, fontStyle: 'bold' },
-      1: { cellWidth: 95 },
+      1: { cellWidth: 80 },
       2: { cellWidth: 45 },
     },
     margin: { left: 14, right: 14 },

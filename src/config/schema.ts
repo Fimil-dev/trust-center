@@ -61,7 +61,7 @@ const changelogEntrySchema = z.object({
 const controlDomainSchema = z.object({
   domain: z.string().min(1),
   icon: z.string().default('shield'),
-  items: z.array(controlItemSchema),
+  items: z.array(controlItemSchema).min(1),
 });
 
 const subprocessorSchema = z.object({

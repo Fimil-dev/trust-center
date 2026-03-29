@@ -53,4 +53,23 @@ describe('PDF generation', () => {
     const file = path.join(DOWNLOADS_DIR, 'questionnaire-sig-full.pdf');
     expect(fs.existsSync(file)).toBe(false);
   });
+
+  it('compliance report should contain company name', () => {
+    const buf = fs.readFileSync(path.join(DOWNLOADS_DIR, 'fimil-compliance-report.pdf'));
+    const text = buf.toString('latin1');
+    expect(text).toContain('Fimil');
+  });
+
+  it('compliance report should contain framework names', () => {
+    const buf = fs.readFileSync(path.join(DOWNLOADS_DIR, 'fimil-compliance-report.pdf'));
+    const text = buf.toString('latin1');
+    expect(text).toContain('ISO 27001');
+  });
+
+  it('questionnaire PDF should contain questionnaire name and summary', () => {
+    const buf = fs.readFileSync(path.join(DOWNLOADS_DIR, 'questionnaire-mvsp.pdf'));
+    const text = buf.toString('latin1');
+    expect(text).toContain('MVSP');
+    expect(text).toContain('Response Summary');
+  });
 });

@@ -30,7 +30,11 @@ const pctPlanned = Math.round((planned / total) * 100);
         <div class="flex h-full">
           <div class="h-full rounded-l-full bg-emerald-500" style={`width: ${pctImplemented}%`}>
           </div>
-          {partial > 0 && <div class="h-full bg-amber-400" style={`width: ${pctPartial}%`} />}
+          {
+            partial > 0 && (
+              <div class="h-full bg-amber-400 dark:bg-amber-500" style={`width: ${pctPartial}%`} />
+            )
+          }
           {
             planned > 0 && (
               <div class="h-full bg-gray-200 dark:bg-gray-700" style={`width: ${pctPlanned}%`} />
@@ -46,7 +50,7 @@ const pctPlanned = Math.round((planned / total) * 100);
         {
           partial > 0 && (
             <span class="flex items-center gap-1.5">
-              <span class="inline-block h-2 w-2 rounded-full bg-amber-400" />
+              <span class="inline-block h-2 w-2 rounded-full bg-amber-400 dark:bg-amber-500" />
               Partial
             </span>
           )

@@ -328,4 +328,64 @@ describe('defineConfig', () => {
       } as never);
     }).toThrow('trust.config.ts validation failed');
   });
+
+  it('should reject empty company name', () => {
+    expect(() => {
+      defineConfig({
+        company: { name: '', securityEmail: 'test@test.com' },
+        contact: { cta: { href: 'mailto:t@t.com' } },
+      } as never);
+    }).toThrow();
+  });
+
+  it('should reject invalid hex color', () => {
+    expect(() => {
+      defineConfig({
+        company: { name: 'Test', securityEmail: 'test@test.com' },
+        theme: { colors: { primary: 'not-a-color' } },
+        contact: { cta: { href: 'mailto:t@t.com' } },
+      } as never);
+    }).toThrow();
+  });
+
+  it('should accept valid hex color', () => {
+    const config = defineConfig({
+      company: { name: 'Test', securityEmail: 'test@test.com' },
+      theme: { colors: { primary: '#FF5733' } },
+      contact: { cta: { href: 'mailto:t@t.com' } },
+    } as never);
+    expect(config.theme.colors.primary).toBe('#FF5733');
+  });
+
+  it('should reject empty control title', () => {
+    expect(() => {
+      defineConfig({
+        company: { name: 'Test', securityEmail: 'test@test.com' },
+        controls: [
+          { domain: 'Test', items: [{ title: '', description: 'desc', status: 'implemented' }] },
+        ],
+        contact: { cta: { href: 'mailto:t@t.com' } },
+      } as never);
+    }).toThrow();
+  });
+
+  it('should reject empty changelog date', () => {
+    expect(() => {
+      defineConfig({
+        company: { name: 'Test', securityEmail: 'test@test.com' },
+        changelog: [{ date: '', title: 'Test' }],
+        contact: { cta: { href: 'mailto:t@t.com' } },
+      } as never);
+    }).toThrow();
+  });
+
+  it('should reject control domain with empty items array', () => {
+    expect(() => {
+      defineConfig({
+        company: { name: 'Test', securityEmail: 'test@test.com' },
+        controls: [{ domain: 'Empty Domain', items: [] }],
+        contact: { cta: { href: 'mailto:t@t.com' } },
+      } as never);
+    }).toThrow();
+  });
 });
