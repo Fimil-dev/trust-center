@@ -162,9 +162,9 @@ export const mvsp: Questionnaire = {
           id: '3.2',
           question:
             'Data flow diagram — Maintain an up-to-date diagram of how sensitive data reaches your systems and where it ends up being stored.',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Architecture documented in CLAUDE.md with data flow through scanner pipeline and storage layers. Data Governance Policy covers data handling requirements. No standalone visual data flow diagram maintained.',
+            'Visual data flow diagram published on the trust center showing data sources, processing pipeline (ephemeral scanners with network isolation), storage layers (AES-256 encrypted PostgreSQL, Redis), subprocessor data flows, and security boundaries. Data Governance Policy covers data handling requirements.',
         },
         {
           id: '3.3',

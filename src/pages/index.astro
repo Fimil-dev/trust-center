@@ -5,6 +5,7 @@ import Hero from '../components/Hero.astro';
 import ControlStatusBar from '../components/ControlStatusBar.astro';
 import FrameworkCard from '../components/FrameworkCard.astro';
 import ControlDomain from '../components/ControlDomain.astro';
+import DataFlowDiagram from '../components/DataFlowDiagram.astro';
 import SubprocessorTable from '../components/SubprocessorTable.astro';
 import DocumentGrid from '../components/DocumentGrid.astro';
 import QuestionnaireCard from '../components/QuestionnaireCard.astro';
@@ -130,7 +131,35 @@ const heroStats = [
       )
     }
 
-    {/* 03 — Subprocessors */}
+    {/* 03 — Architecture */}
+    <section
+      id="architecture"
+      class="reveal border-b border-gray-200 py-16 sm:py-24 dark:border-gray-800"
+    >
+      <div class="mx-auto max-w-5xl px-6">
+        <p
+          class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
+          style="font-family: var(--font-heading)"
+        >
+          03 — Architecture
+        </p>
+        <h2
+          class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
+          style="font-family: var(--font-heading)"
+        >
+          Data Flow
+        </h2>
+        <p class="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+          How data moves through the Fimil platform — from ingestion to storage, with security
+          boundaries at every layer.
+        </p>
+        <div class="mt-8">
+          <DataFlowDiagram />
+        </div>
+      </div>
+    </section>
+
+    {/* 04 — Subprocessors */}
     {
       site.subprocessors.length > 0 && (
         <section
@@ -142,7 +171,7 @@ const heroStats = [
               class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
               style="font-family: var(--font-heading)"
             >
-              03 — Subprocessors
+              04 — Subprocessors
             </p>
             <h2
               class="mb-8 text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
@@ -160,7 +189,7 @@ const heroStats = [
       )
     }
 
-    {/* 04 — Documents */}
+    {/* 05 — Documents */}
     <section
       id="documents"
       class="reveal border-b border-gray-200 py-16 sm:py-24 dark:border-gray-800"
@@ -170,7 +199,7 @@ const heroStats = [
           class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
           style="font-family: var(--font-heading)"
         >
-          04 — Documents
+          05 — Documents
         </p>
         <h2
           class="mb-8 text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
@@ -182,7 +211,7 @@ const heroStats = [
       </div>
     </section>
 
-    {/* 05 — Questionnaires */}
+    {/* 06 — Questionnaires */}
     {
       site.questionnaires.filter((q) => q.enabled).length > 0 && (
         <section
@@ -194,7 +223,7 @@ const heroStats = [
               class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
               style="font-family: var(--font-heading)"
             >
-              05 — Questionnaires
+              06 — Questionnaires
             </p>
             <h2
               class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
@@ -228,7 +257,7 @@ const heroStats = [
       )
     }
 
-    {/* 06 — Changelog */}
+    {/* 07 — Changelog */}
     {
       site.changelog && site.changelog.length > 0 && (
         <section
@@ -240,7 +269,7 @@ const heroStats = [
               class="mb-4 text-xs tracking-widest text-gray-400 uppercase dark:text-gray-500"
               style="font-family: var(--font-heading)"
             >
-              06 — Changelog
+              07 — Changelog
             </p>
             <h2
               class="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-gray-100"
@@ -256,7 +285,7 @@ const heroStats = [
       )
     }
 
-    {/* 07 — Contact */}
+    {/* 08 — Contact */}
     <section id="contact" class="reveal">
       <div class="mx-auto max-w-5xl px-6">
         <ContactCta

@@ -89,9 +89,9 @@ export const vsaCore: Questionnaire = {
         {
           id: 'SI-5c',
           question: 'Data Flow Diagram available?',
-          answer: 'partial',
+          answer: 'yes',
           explanation:
-            'Architecture and data flow documented in technical documentation. No standalone visual data flow diagram maintained yet.',
+            'Visual data flow diagram published on the trust center showing data ingestion, scanner pipeline (ephemeral, network-isolated), encrypted storage, subprocessor flows, and security boundaries at every layer.',
         },
         {
           id: 'SI-5d',
