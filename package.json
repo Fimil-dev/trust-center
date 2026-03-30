@@ -20,14 +20,14 @@
     "@astrojs/check": "^0.9.8",
     "@lucide/astro": "^0.577.0",
     "@tailwindcss/vite": "^4.1.0",
-    "astro": "^6.0.8",
+    "astro": "^6.1.2",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.8.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
-    "@typescript-eslint/parser": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.2",
     "eslint": "^9.39.4",
     "eslint-plugin-astro": "^1.6.0",
     "jspdf": "^4.2.1",
@@ -36,7 +36,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tsx": "^4.21.0",
-    "typescript-eslint": "^8.57.0",
-    "vitest": "^4.1.1"
+    "typescript-eslint": "^8.57.2",
+    "vitest": "^4.1.2"
   }
 }
