@@ -531,6 +531,13 @@ export default defineConfig({
       location: 'United States',
       dpaUrl: 'https://posthog.com/dpa',
     },
+    {
+      name: 'Anthropic',
+      purpose:
+        'LLM inference for AI-assisted security features (AI Pentest agent reasoning loop, finding triage, code remediation suggestions, finding chat). When AI Pentest is enabled on a target, response data returned by your authorized target — including any third-party PII the target surfaces during exploitation — is processed through Anthropic\'s API as part of the agent reasoning loop. See ai-pentest.md §6.12 for the data flow and the per-policy `agent_runtime_redaction` mitigation.',
+      location: 'United States',
+      dpaUrl: 'https://www.anthropic.com/legal/commercial-terms',
+    },
   ],
 
   documents: {
@@ -562,8 +569,8 @@ export default defineConfig({
     ogImage: '/og-trust-center.png',
   },
 
-  lastReviewed: 'March 2026',
-  subprocessorsLastUpdated: 'March 2026',
+  lastReviewed: 'May 2026',
+  subprocessorsLastUpdated: 'May 2026',
   questionnaires: questionnaireMeta,
 
   changelog: [
