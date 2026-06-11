@@ -92,6 +92,7 @@ const contactSchema = z.object({
   cta: ctaSchema,
   questionnaireUrl: z.string().url().nullable().default(null),
   prefilledQuestionnaireUrl: z.string().url().nullable().default(null),
+  prefilledQuestionnaireLabel: z.string().default('Download Pre-filled Questionnaire'),
 });
 
 const seoSchema = z.object({

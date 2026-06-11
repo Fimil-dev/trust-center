@@ -534,20 +534,20 @@ export default defineConfig({
     {
       name: 'Anthropic',
       purpose:
-        'LLM inference for AI-assisted security features (AI Pentest agent reasoning loop, finding triage, code remediation suggestions, finding chat). When AI Pentest is enabled on a target, response data returned by your authorized target — including any third-party PII the target surfaces during exploitation — is processed through Anthropic\'s API as part of the agent reasoning loop. See ai-pentest.md §6.12 for the data flow and the per-policy `agent_runtime_redaction` mitigation.',
+        "LLM inference for AI-assisted security features, including the AI Pentest agent reasoning loop, automated finding triage, code remediation suggestions, and in-app security chat. When the AI Pentest feature is enabled for a target, HTTP response data returned by your authorized target application is processed through Anthropic's API as part of the agent reasoning loop. Per-policy runtime redaction is applied before transmission to minimize exposure of sensitive data surfaced during testing.",
       location: 'United States',
       dpaUrl: 'https://www.anthropic.com/legal/commercial-terms',
     },
   ],
 
   documents: {
-    privacyPolicy: 'https://fimil.dev/privacy',
-    termsOfService: 'https://fimil.dev/terms',
-    dataProcessingAgreement: 'https://fimil.dev/legal/dpa',
-    serviceLevelAgreement: 'https://fimil.dev/legal/sla',
-    acceptableUsePolicy: 'https://fimil.dev/legal/acceptable-use',
-    cookiePolicy: 'https://fimil.dev/legal/cookies',
-    securityPolicy: 'https://fimil.dev/security',
+    privacyPolicy: 'https://fimil.dev/legal/privacy-policy',
+    termsOfService: 'https://fimil.dev/legal/terms-of-service',
+    dataProcessingAgreement: 'https://fimil.dev/legal/data-processing-agreement',
+    serviceLevelAgreement: 'https://fimil.dev/legal/service-level-agreement',
+    acceptableUsePolicy: 'https://fimil.dev/legal/acceptable-use-policy',
+    cookiePolicy: 'https://fimil.dev/legal/cookie-policy',
+    securityPolicy: 'https://fimil.dev/legal/security-policy',
   },
 
   contact: {
