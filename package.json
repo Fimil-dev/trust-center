@@ -14,13 +14,13 @@
     "test:watch": "vitest"
   },
   "overrides": {
-    "volar-service-yaml": "0.0.70"
+    "volar-service-yaml": "0.0.71"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.2",
+    "@astrojs/check": "^0.9.9",
     "@lucide/astro": "^0.577.0",
     "@tailwindcss/vite": "^4.1.0",
-    "astro": "^6.1.2",
+    "astro": "^6.1.10",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.8.0",
     "zod": "^3.25.76"
