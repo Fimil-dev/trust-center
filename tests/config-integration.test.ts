@@ -85,9 +85,18 @@ describe('changelog', () => {
     });
   });
 
+  it('every changelog date parses as a valid date', () => {
+    config.changelog.forEach((entry) => {
+      const d = new Date(entry.date);
+      expect(Number.isNaN(d.getTime())).toBe(false);
+    });
+  });
+
   it('entries should be in reverse chronological order', () => {
     for (let i = 0; i < config.changelog.length - 1; i++) {
-      expect(config.changelog[i]!.date >= config.changelog[i + 1]!.date).toBe(true);
+      const a = new Date(config.changelog[i]!.date).getTime();
+      const b = new Date(config.changelog[i + 1]!.date).getTime();
+      expect(a >= b).toBe(true);
     }
   });
 });
