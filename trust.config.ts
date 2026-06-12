@@ -13,9 +13,9 @@ export default defineConfig({
   },
 
   theme: {
-    mode: 'system',
+    mode: 'dark',
     colors: {
-      primary: '#7C3AED',
+      primary: '#0EA5E9',
     },
     fonts: {
       heading: 'IBM Plex Mono',

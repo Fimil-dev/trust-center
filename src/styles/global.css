@@ -11,6 +11,16 @@
   --color-primary-400: color-mix(in srgb, var(--trust-primary, #7c3aed), white 25%);
 }
 
+/* Accent color for TEXT — darker shade on light backgrounds, lighter shade on
+   dark, so mid-luminance primaries (e.g. sky-500) keep AA contrast either way */
+:root {
+  --trust-accent-text: var(--color-primary-600);
+}
+
+.dark {
+  --trust-accent-text: var(--color-primary-400);
+}
+
 html {
   scroll-behavior: smooth;
 }
