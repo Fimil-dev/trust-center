@@ -37,7 +37,7 @@
 
 ## P3 — Low (backlog)
 
-- [ ] **Add backdrop-blur to StickyNav in dark mode** — StickyNav uses `bg-white dark:bg-gray-950` with no transparency or blur. In dark mode it blends into the page. Add `bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm` for subtle elevation. `[Dark Mode]`
+- [x] **Add backdrop-blur to StickyNav in dark mode** — StickyNav uses `bg-white dark:bg-gray-950` with no transparency or blur. In dark mode it blends into the page. Add `bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm` for subtle elevation. `[Dark Mode]`
 - [ ] **Add PDF error scenario tests** — No tests for PDF generation failure paths: missing logo file, missing questionnaire data, corrupted config. Add negative test cases once error handling is added to `generate-pdfs.ts`. `[Testing]`
 - [ ] **Plan EU Article 27 representative appointment** — GDPR-13 in VSA Core (line 745) marked "no" with note "planned as EU customer base grows." No timeline specified. Add to roadmap and update questionnaire answers when representative is appointed. `[Compliance]`
 - [ ] **Fix ControlStatusBar responsive overflow on small screens** — Progress bar has `min-w-[120px]` which can cause horizontal scroll on devices < 320px wide (e.g., iPhone SE). Change to `min-w-[80px] sm:min-w-[120px]`. `[Responsiveness]`
