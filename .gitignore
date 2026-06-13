@@ -9,3 +9,8 @@ public/downloads/
 .claude/
 
 CLAUDE.md
+
+# Playwright e2e
+/playwright-report/
+/test-results/
+/playwright/.cache/
