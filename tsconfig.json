@@ -6,5 +6,5 @@
       "@/*": ["src/*"]
     }
   },
-  "exclude": ["scripts"]
+  "exclude": ["scripts", "e2e", "playwright.config.ts"]
 }
