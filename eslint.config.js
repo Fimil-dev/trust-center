@@ -3,7 +3,16 @@ import tseslint from 'typescript-eslint';
 
 export default [
   {
-    ignores: ['dist/', '.astro/', 'node_modules/', 'scripts/'],
+    ignores: [
+      'dist/',
+      '.astro/',
+      'node_modules/',
+      'scripts/',
+      'e2e/',
+      'playwright.config.ts',
+      'playwright-report/',
+      'test-results/',
+    ],
   },
   ...tseslint.configs.recommended,
   ...eslintPluginAstro.configs['flat/recommended'],
