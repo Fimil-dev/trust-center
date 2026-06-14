@@ -79,6 +79,7 @@ const documentsSchema = z.object({
   acceptableUsePolicy: z.string().url().nullable().default(null),
   cookiePolicy: z.string().url().nullable().default(null),
   securityPolicy: z.string().url().nullable().default(null),
+  subprocessors: z.string().url().nullable().default(null),
 });
 
 const ctaSchema = z.object({

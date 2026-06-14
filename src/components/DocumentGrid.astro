@@ -8,6 +8,7 @@ interface Props {
     acceptableUsePolicy?: string | null;
     cookiePolicy?: string | null;
     securityPolicy?: string | null;
+    subprocessors?: string | null;
   };
 }
 
@@ -21,6 +22,7 @@ const docLabels: Record<string, string> = {
   acceptableUsePolicy: 'Acceptable Use Policy',
   cookiePolicy: 'Cookie Policy',
   securityPolicy: 'Security Policy',
+  subprocessors: 'Subprocessors',
 };
 
 type DocKey = keyof typeof docLabels;

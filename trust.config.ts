@@ -538,6 +538,24 @@ export default defineConfig({
       location: 'United States',
       dpaUrl: 'https://www.anthropic.com/legal/commercial-terms',
     },
+    {
+      name: 'GitLab',
+      purpose: 'Source-code integration (OAuth) for repositories hosted on GitLab',
+      location: 'United States',
+      dpaUrl: 'https://about.gitlab.com/privacy/',
+    },
+    {
+      name: 'Atlassian (Bitbucket)',
+      purpose: 'Source-code integration (OAuth) for repositories hosted on Bitbucket',
+      location: 'Global',
+      dpaUrl: 'https://www.atlassian.com/legal/data-processing-addendum',
+    },
+    {
+      name: 'Telegram',
+      purpose: 'Operational alert delivery for security and scope-guard events',
+      location: 'Global',
+      dpaUrl: 'https://telegram.org/privacy',
+    },
   ],
 
   documents: {
@@ -548,6 +566,7 @@ export default defineConfig({
     acceptableUsePolicy: 'https://fimil.dev/legal/acceptable-use-policy',
     cookiePolicy: 'https://fimil.dev/legal/cookie-policy',
     securityPolicy: 'https://fimil.dev/legal/security-policy',
+    subprocessors: 'https://fimil.dev/legal/subprocessors',
   },
 
   contact: {
@@ -569,8 +588,8 @@ export default defineConfig({
     ogImage: '/og-trust-center.png',
   },
 
-  lastReviewed: 'May 2026',
-  subprocessorsLastUpdated: 'May 2026',
+  lastReviewed: 'June 2026',
+  subprocessorsLastUpdated: 'June 2026',
   questionnaires: questionnaireMeta,
 
   changelog: [
