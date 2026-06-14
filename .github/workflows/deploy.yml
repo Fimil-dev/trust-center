@@ -28,6 +28,10 @@ jobs:
       - run: npx eslint .
       - run: npx vitest run
       - run: npm run build
+        env:
+          # PostHog is compile-time (Astro inlines PUBLIC_* at build). Empty → no-op.
+          PUBLIC_POSTHOG_KEY: ${{ secrets.PUBLIC_POSTHOG_KEY }}
+          PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST }}
       - name: Generate npm SBOM
         uses: anchore/sbom-action@v0
         with:

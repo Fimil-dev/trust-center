@@ -1,0 +1,146 @@
+---
+// 3-option cookie-consent banner (Accept All / Reject Non-Essential / Customize)
+// gating PostHog analytics — fulfils the consent posture the trust center's
+// CAIQ/VSA questionnaires assert publicly: consent-gated analytics, DNT
+// respected, per-category toggles, persisted with a version + timestamp.
+// GO-LIVE WS-D4.
+---
+
+<div
+  id="cookie-consent"
+  hidden
+  role="dialog"
+  aria-label="Cookie consent"
+  aria-live="polite"
+  class="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95"
+>
+  <div class="mx-auto max-w-5xl px-4 py-4 sm:px-6">
+    {/* Default view */}
+    <div
+      data-view="default"
+      class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p class="text-sm text-gray-600 dark:text-gray-300">
+        We use privacy-respecting analytics to understand how this site is used. Essential cookies
+        are always on. See our <a
+          href="https://fimil.dev/legal/cookie-policy"
+          class="underline"
+          style="color: var(--trust-primary)">Cookie Policy</a
+        >.
+      </p>
+      <div class="flex flex-wrap gap-2">
+        <button
+          data-action="customize"
+          class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+          >Customize</button
+        >
+        <button
+          data-action="reject"
+          class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+          >Reject non-essential</button
+        >
+        <button
+          data-action="accept"
+          class="rounded-lg px-3 py-1.5 text-sm font-medium text-white"
+          style="background: var(--trust-primary)">Accept all</button
+        >
+      </div>
+    </div>
+
+    {/* Customize view */}
+    <div data-view="customize" hidden class="flex flex-col gap-3">
+      <p class="text-sm text-gray-600 dark:text-gray-300">Choose which cookies to allow.</p>
+      <label
+        class="flex items-center justify-between gap-3 text-sm text-gray-600 dark:text-gray-300"
+      >
+        <span
+          ><strong class="text-gray-900 dark:text-gray-100">Essential</strong> — required for the site
+          to function.</span
+        >
+        <input type="checkbox" checked disabled />
+      </label>
+      <label
+        class="flex items-center justify-between gap-3 text-sm text-gray-600 dark:text-gray-300"
+      >
+        <span
+          ><strong class="text-gray-900 dark:text-gray-100">Functional</strong> — remembers your preferences.</span
+        >
+        <input data-toggle="functional" type="checkbox" />
+      </label>
+      <label
+        class="flex items-center justify-between gap-3 text-sm text-gray-600 dark:text-gray-300"
+      >
+        <span
+          ><strong class="text-gray-900 dark:text-gray-100">Analytics</strong> — anonymous usage (PostHog).</span
+        >
+        <input data-toggle="analytics" type="checkbox" />
+      </label>
+      <div class="flex justify-end gap-2">
+        <button
+          data-action="back"
+          class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+          >Back</button
+        >
+        <button
+          data-action="save"
+          class="rounded-lg px-3 py-1.5 text-sm font-medium text-white"
+          style="background: var(--trust-primary)">Save choices</button
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initConsent, saveConsent } from '../lib/consent';
+
+  const root = document.getElementById('cookie-consent');
+  if (root) {
+    const defaultView = root.querySelector('[data-view="default"]') as HTMLElement | null;
+    const customizeView = root.querySelector('[data-view="customize"]') as HTMLElement | null;
+
+    const show = () => {
+      root.hidden = false;
+    };
+    const hide = () => {
+      root.hidden = true;
+    };
+    const toDefault = () => {
+      if (defaultView) defaultView.hidden = false;
+      if (customizeView) customizeView.hidden = true;
+    };
+    const toCustomize = () => {
+      if (defaultView) defaultView.hidden = true;
+      if (customizeView) customizeView.hidden = false;
+    };
+
+    const { needsBanner } = initConsent();
+    if (needsBanner) show();
+
+    root.querySelector('[data-action="accept"]')?.addEventListener('click', () => {
+      saveConsent(true, true);
+      hide();
+    });
+    root.querySelector('[data-action="reject"]')?.addEventListener('click', () => {
+      saveConsent(false, false);
+      hide();
+    });
+    root.querySelector('[data-action="customize"]')?.addEventListener('click', toCustomize);
+    root.querySelector('[data-action="back"]')?.addEventListener('click', toDefault);
+    root.querySelector('[data-action="save"]')?.addEventListener('click', () => {
+      const functional =
+        (root.querySelector('[data-toggle="functional"]') as HTMLInputElement | null)?.checked ??
+        false;
+      const analytics =
+        (root.querySelector('[data-toggle="analytics"]') as HTMLInputElement | null)?.checked ??
+        false;
+      saveConsent(functional, analytics);
+      hide();
+    });
+
+    window.addEventListener('fimil:show-cookie-consent', () => {
+      toDefault();
+      show();
+    });
+  }
+</script>
