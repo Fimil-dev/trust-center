@@ -3,6 +3,8 @@ interface Props {
   documents: {
     privacyPolicy?: string | null;
     termsOfService?: string | null;
+    masterSubscriptionAgreement?: string | null;
+    aiPentestAddendum?: string | null;
     dataProcessingAgreement?: string | null;
     serviceLevelAgreement?: string | null;
     acceptableUsePolicy?: string | null;
@@ -17,6 +19,8 @@ const { documents } = Astro.props;
 const docLabels: Record<string, string> = {
   privacyPolicy: 'Privacy Policy',
   termsOfService: 'Terms of Service',
+  masterSubscriptionAgreement: 'Master Subscription Agreement',
+  aiPentestAddendum: 'AI-Pentest Addendum',
   dataProcessingAgreement: 'Data Processing Agreement',
   serviceLevelAgreement: 'Service Level Agreement',
   acceptableUsePolicy: 'Acceptable Use Policy',

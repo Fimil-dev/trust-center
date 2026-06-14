@@ -74,6 +74,8 @@ const subprocessorSchema = z.object({
 const documentsSchema = z.object({
   privacyPolicy: z.string().url().nullable().default(null),
   termsOfService: z.string().url().nullable().default(null),
+  masterSubscriptionAgreement: z.string().url().nullable().default(null),
+  aiPentestAddendum: z.string().url().nullable().default(null),
   dataProcessingAgreement: z.string().url().nullable().default(null),
   serviceLevelAgreement: z.string().url().nullable().default(null),
   acceptableUsePolicy: z.string().url().nullable().default(null),

@@ -561,6 +561,8 @@ export default defineConfig({
   documents: {
     privacyPolicy: 'https://fimil.dev/legal/privacy-policy',
     termsOfService: 'https://fimil.dev/legal/terms-of-service',
+    masterSubscriptionAgreement: 'https://fimil.dev/legal/master-subscription-agreement',
+    aiPentestAddendum: 'https://fimil.dev/legal/ai-pentest-addendum',
     dataProcessingAgreement: 'https://fimil.dev/legal/data-processing-agreement',
     serviceLevelAgreement: 'https://fimil.dev/legal/service-level-agreement',
     acceptableUsePolicy: 'https://fimil.dev/legal/acceptable-use-policy',
