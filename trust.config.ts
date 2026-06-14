@@ -222,9 +222,9 @@ export default defineConfig({
         {
           title: 'International Data Transfers',
           description:
-            'DPAs executed with all subprocessors. Standard Contractual Clauses (SCCs) for EU-to-US transfers planned for annexation to DPA.',
+            'We require a data processing agreement with each subprocessor that processes customer data and execute one where the vendor offers it. EU/UK Standard Contractual Clauses (Module Two) and the UK IDTA are incorporated into our customer DPA; annex completion is in progress.',
           status: 'partial',
-          lastVerified: 'March 2026',
+          lastVerified: 'June 2026',
         },
       ],
     },
@@ -419,9 +419,9 @@ export default defineConfig({
         {
           title: 'Data Processing Agreements',
           description:
-            'DPAs executed with all vendors who process customer data. Exit strategies documented for critical vendors.',
-          status: 'implemented',
-          lastVerified: 'March 2026',
+            'We require a data processing agreement with each vendor that processes customer data and execute one where the vendor offers it; collection of executed DPAs across all subprocessors is in progress. Exit strategies documented for critical vendors.',
+          status: 'partial',
+          lastVerified: 'June 2026',
         },
       ],
     },
