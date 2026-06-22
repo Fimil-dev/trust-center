@@ -23,16 +23,16 @@
     "@astrojs/check": "^0.9.9",
     "@lucide/astro": "^0.577.0",
     "@tailwindcss/vite": "^4.3.1",
-    "astro": "^6.4.7",
-    "posthog-js": "^1.386.8",
+    "astro": "^6.4.8",
+    "posthog-js": "^1.391.9",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.8.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0",
-    "@types/node": "^25.9.3",
-    "@typescript-eslint/parser": "^8.61.0",
+    "@types/node": "^25.9.4",
+    "@typescript-eslint/parser": "^8.61.1",
     "cross-env": "^7.0.3",
     "eslint": "^9.39.4",
     "eslint-plugin-astro": "^1.7.0",
@@ -42,7 +42,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tsx": "^4.22.4",
-    "typescript-eslint": "^8.61.0",
+    "typescript-eslint": "^8.61.1",
     "vitest": "^4.1.9"
   }
 }
