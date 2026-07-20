@@ -22,27 +22,27 @@
   "dependencies": {
     "@astrojs/check": "^0.9.9",
     "@lucide/astro": "^0.577.0",
-    "@tailwindcss/vite": "^4.3.1",
-    "astro": "^6.4.7",
-    "posthog-js": "^1.386.8",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^6.4.8",
+    "posthog-js": "^1.404.1",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.8.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.0",
-    "@types/node": "^25.9.3",
-    "@typescript-eslint/parser": "^8.61.0",
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^25.9.5",
+    "@typescript-eslint/parser": "^8.64.0",
     "cross-env": "^7.0.3",
-    "eslint": "^9.39.4",
+    "eslint": "^9.39.5",
     "eslint-plugin-astro": "^1.7.0",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.5",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.8.0",
-    "tsx": "^4.22.4",
-    "typescript-eslint": "^8.61.0",
-    "vitest": "^4.1.9"
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tsx": "^4.23.1",
+    "typescript-eslint": "^8.64.0",
+    "vitest": "^4.1.10"
   }
 }
